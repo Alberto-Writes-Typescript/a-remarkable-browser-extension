@@ -33,4 +33,4 @@ dist/
 .tsbuildinfo
 
 # CSS Bundle
-./src/style.css
+/src/style.css

@@ -1,0 +1,40 @@
+version: 2
+updates:
+  # NPM Package Configuration
+  - package-ecosystem: "npm"
+    directory: "/"
+    # Labels to set on pull requests
+    labels:
+      - "npm"
+      - "dependencies"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      # Prefix all commit messages with "npm: "
+      prefix: "npm"
+    groups:
+      # Javascript Dependencies
+      js:
+        patterns:
+          - "*"
+      # CSS Bundler Dependencies
+      css-bundling:
+        patterns:
+          - "postcss*"
+          - "autoprefixer"
+          - "tailwind*"
+        exclude-patterns:
+          - "*" # Exclude all other dependencies
+      # Linter Dependencies
+      linter:
+        patterns:
+          - "eslint*"
+          - "@typescript*"
+        exclude-patterns:
+          - "*" # Exclude all other dependencies
+      # Storybook Dependencies
+      storybook:
+        patterns:
+          - "*storybook*"
+        exclude-patterns:
+          - "*" # Exclude all other dependencies

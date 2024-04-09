@@ -33,4 +33,7 @@ dist/
 .tsbuildinfo
 
 # CSS Bundle
-/src/style.css
+/assets/css/style.css
+
+# RubyMine Configuration
+.idea/*

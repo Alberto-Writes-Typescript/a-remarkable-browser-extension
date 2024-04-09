@@ -6,9 +6,9 @@
   "author": "Alberto Hernández Cerezo <pascu216@gmail.com>",
   "scripts": {
     "build:plasmo": "plasmo build",
-    "build:tailwind": "npx tailwindcss --postcss ./config/postcss.config.cjs -i ./src/tailwind.css -o src/style.css -c ./config/tailwindcss.config.mjs --minify",
+    "build:tailwind": "npx tailwindcss --postcss ./config/postcss.config.cjs -i assets/css/tailwind.css -o assets/css/style.css -c ./config/tailwindcss.config.mjs --minify",
     "start:plasmo": "plasmo dev",
-    "start:tailwind": "npx tailwindcss --postcss ./config/postcss.config.cjs -i ./src/tailwind.css -o src/style.css -c ./config/tailwindcss.config.mjs --watch",
+    "start:tailwind": "npx tailwindcss --postcss ./config/postcss.config.cjs -i assets/css/tailwind.css -o assets/css/style.css -c ./config/tailwindcss.config.mjs --watch",
     "start": "npx concurrently --kill-others \"yarn run start:tailwind\" \"yarn run start:plasmo\"",
     "package": "plasmo package"
   },

@@ -31,3 +31,6 @@ dist/
 
 # typescript
 .tsbuildinfo
+
+# CSS Bundle
+./src/style.css

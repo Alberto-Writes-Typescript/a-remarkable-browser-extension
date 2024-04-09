@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import './style.css'
+import '../assets/css/style.css'
 
 function IndexPopup() {
   const [data, setData] = useState("")

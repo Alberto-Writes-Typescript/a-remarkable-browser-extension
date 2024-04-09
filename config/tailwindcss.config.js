@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+const configuration = {
 	// Just-In-Time compilation mode:
 	// https://v2.tailwindcss.com/docs/just-in-time-mode
 	mode: 'jit',
@@ -18,3 +18,5 @@ export default {
 		require('autoprefixer')
 	]
 }
+
+module.exports = configuration

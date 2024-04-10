@@ -14,7 +14,7 @@
     "start:storybook": "storybook dev -p 6006",
     "start:tailwind": "npx tailwindcss --postcss ./config/postcss.config.cjs -i assets/css/tailwind.css -o assets/css/style.css -c ./config/tailwindcss.config.js --watch",
     "start:tailwind-preview": "tailwind-config-viewer -o -c ./config/tailwindcss.config.js serve -p 3001",
-    "start": "npx concurrently --kill-others \"yarn run start:tailwind\" \"yarn run start:plasmo\" \"yarn run start:tailwind-preview\"",
+    "start": "npx concurrently --kill-others \"yarn run start:*\"",
     "package": "plasmo package"
   },
   "dependencies": {

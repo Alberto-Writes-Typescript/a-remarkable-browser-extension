@@ -3,8 +3,7 @@ interface UploadWidgetComponentProps {
 }
 
 export default function UploadWidgetComponent ({ url }: UploadWidgetComponentProps): React.ReactElement {
-
-  function requestUpload () {
+  function requestUpload (): void {
     console.log('me llama')
   }
 

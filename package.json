@@ -20,6 +20,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@plasmohq/messaging": "^0.6.2",
     "plasmo": "0.85.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
@@ -51,6 +52,7 @@
     "eslint-plugin-storybook": "^0.8.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "jest-fetch-mock": "^3.0.3",
     "postcss": "^8.4.35",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^16.0.1",

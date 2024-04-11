@@ -9,6 +9,7 @@
     "./**/*.tsx"
   ],
   "compilerOptions": {
+    "verbatimModuleSyntax": false,
     "strictNullChecks": true,
     "paths": {
       "~*": [

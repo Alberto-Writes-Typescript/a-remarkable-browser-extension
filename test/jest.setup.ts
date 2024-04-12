@@ -1,4 +1,10 @@
+import * as dotenv from 'dotenv'
 import { enableFetchMocks } from 'jest-fetch-mock'
+
+/**
+ * jest-fetch-mock Configuration
+ * -----------------------------
+ */
 
 /**
  * `fetch` polyfill for Jest
@@ -17,3 +23,13 @@ enableFetchMocks()
  * Ensure that `fetch` mock is disabled by default
  */
 fetchMock.disableMocks()
+
+/**
+ * DotEnv Configuration
+ * --------------------
+ */
+
+/**
+ * Load environment variables from .env.test file
+ */
+dotenv.config({ path: '.env.test' })

@@ -25,18 +25,20 @@ export class WebPdfDocument {
     return new WebPdfDocument(buffer, name)
   }
 
-  readonly #buffer: ArrayBuffer
+  readonly #arrayBuffer: ArrayBuffer
   readonly #name: string
-  readonly #size: number
 
-  constructor (buffer: ArrayBuffer, name: string) {
-    this.#buffer = buffer
+  constructor (arrayBuffer: ArrayBuffer, name: string) {
+    this.#arrayBuffer = arrayBuffer
     this.#name = name
-    this.#size = buffer.byteLength
   }
 
-  get buffer (): ArrayBuffer {
-    return this.#buffer
+  get arrayBuffer (): ArrayBuffer {
+    return this.#arrayBuffer
+  }
+
+  get buffer (): Buffer {
+    return Buffer.from(this.#arrayBuffer)
   }
 
   get name (): string {
@@ -44,6 +46,6 @@ export class WebPdfDocument {
   }
 
   get size (): number {
-    return this.#size
+    return this.#arrayBuffer.byteLength
   }
 }

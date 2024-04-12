@@ -12,3 +12,8 @@ import { enableFetchMocks } from 'jest-fetch-mock'
  * that use `fetch` without errors.
  */
 enableFetchMocks()
+
+/**
+ * Ensure that `fetch` mock is disabled by default
+ */
+fetchMock.disableMocks()

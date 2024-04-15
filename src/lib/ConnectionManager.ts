@@ -12,6 +12,10 @@ export default class ConnectionManager {
     this.#reMarkableClient = RemarkableClient.withFetchHttpClient()
   }
 
+  get remarkableClient (): RemarkableClient {
+    return this.#reMarkableClient
+  }
+
   async deviceToken (): Promise<string | undefined> {
     return this.#tokenStore.get('deviceToken')
   }
@@ -20,13 +24,13 @@ export default class ConnectionManager {
     return this.#tokenStore.get('sessionToken')
   }
 
-  async pair (oneTimeCode: string): Promise<Device> {
+  async pair (oneTimeCode: string): Promise<string> {
     const deviceToken = await this.deviceToken()
 
     if (deviceToken != null) {
       this.#reMarkableClient = RemarkableClient.withFetchHttpClient(deviceToken)
 
-      return this.#reMarkableClient.device
+      return this.#reMarkableClient.device.token
     }
 
     if (!this.#reMarkableClient.paired) {
@@ -35,10 +39,10 @@ export default class ConnectionManager {
 
     this.#tokenStore.set('deviceToken', this.#reMarkableClient.device.token)
 
-    return this.#reMarkableClient.device
+    return this.#reMarkableClient.device.token
   }
 
-  async connect (): Promise<Session> {
+  async connect (): Promise<string> {
     const deviceToken = await this.deviceToken()
     const sessionToken = await this.sessionToken()
 
@@ -49,13 +53,13 @@ export default class ConnectionManager {
     }
 
     if (!this.#reMarkableClient.sessionExpired) {
-      return this.#reMarkableClient.session
+      return this.#reMarkableClient.session.token
     }
 
     await this.#reMarkableClient.connect()
 
     this.#tokenStore.set('sessionToken', this.#reMarkableClient.session.token)
 
-    return this.#reMarkableClient.session
+    return this.#reMarkableClient.session.token
   }
 }

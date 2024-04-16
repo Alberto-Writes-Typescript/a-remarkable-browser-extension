@@ -1,14 +1,15 @@
 import { RemarkableClient } from 'a-remarkable-js-sdk'
 import { SecureStorage } from '@plasmohq/storage/secure'
+import { Storage } from '@plasmohq/storage'
 import { v4 as uuidv4 } from 'uuid'
 
 export default class ConnectionManager {
   #reMarkableClient: RemarkableClient
 
-  readonly #tokenStore: SecureStorage
+  readonly #tokenStore: Storage
 
   constructor () {
-    this.#tokenStore = new SecureStorage()
+    this.#tokenStore = new Storage()
     this.#reMarkableClient = RemarkableClient.withFetchHttpClient()
   }
 
@@ -42,15 +43,15 @@ export default class ConnectionManager {
     return this.#reMarkableClient.device.token
   }
 
+  async unpair (): Promise<void> {
+    await this.#tokenStore.remove('deviceToken')
+  }
+
   async connect (): Promise<string> {
     const deviceToken = await this.deviceToken()
     const sessionToken = await this.sessionToken()
 
     this.#reMarkableClient = RemarkableClient.withFetchHttpClient(deviceToken, sessionToken)
-
-    if (!this.#reMarkableClient.paired) {
-      throw new Error('Device not paired')
-    }
 
     if (!this.#reMarkableClient.sessionExpired) {
       return this.#reMarkableClient.session.token

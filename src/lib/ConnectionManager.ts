@@ -63,4 +63,8 @@ export default class ConnectionManager {
 
     return this.#reMarkableClient.session.token
   }
+
+  async disconnect (): Promise<void> {
+    await this.#tokenStore.remove('sessionToken')
+  }
 }

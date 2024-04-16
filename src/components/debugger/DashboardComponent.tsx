@@ -2,6 +2,7 @@ import React from 'react'
 import PairDebuggerComponent from './PairDebuggerComponent'
 import ConnectDebuggerComponent from './ConnectDebuggerComponent'
 import UnpairDebuggerComponent from './UnpairDebuggerComponent'
+import DisconnectDebuggerComponent from './DisconnectDebuggerComponent'
 
 export default function DashboardComponent (): React.ReactElement {
   return (
@@ -14,6 +15,7 @@ export default function DashboardComponent (): React.ReactElement {
         <PairDebuggerComponent/>
         <UnpairDebuggerComponent/>
         <ConnectDebuggerComponent/>
+        <DisconnectDebuggerComponent/>
       </div>
     </div>
   )

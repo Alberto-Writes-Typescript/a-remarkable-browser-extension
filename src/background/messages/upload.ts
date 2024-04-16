@@ -17,11 +17,14 @@ const handler: PlasmoMessaging.MessageHandler = async (request, response) => {
   const connectionManager = new ConnectionManager()
 
   const uploadManager = new UploadManager(
-    await connectionManager.deviceToken(),
-    await connectionManager.sessionToken()
+    // @ts-expect-error - Expected
+    await connectionManager.deviceToken()
   )
 
-  const documentReference = await uploadManager.upload('debugUploadDocument', payload.webDocumentUrl)
+  const documentReference = await uploadManager.upload(
+    'debugUploadDocument',
+    payload.webDocumentUrl
+  )
 
   response.send({ documentReference } satisfies UploadMessageResponsePayload)
 }

@@ -33,8 +33,9 @@ export default function PairDebuggerComponent (): React.ReactElement {
         <div className="flex items-center justify-center gap-2">
           <input
             value={oneTimeCode}
+            maxLength={8}
             onChange={(e) => { setOneTimeCode(e.target.value); }}
-            className="border-[1.5px] border-gray-400 py-[6px] px-2 text-xs rounded-lg" placeholder="one time code"/>
+            className="w-[100px] border-[1.5px] border-gray-400 py-[6px] px-2 text-xs rounded-lg" placeholder="one time code"/>
           {
             retrievingDeviceToken
               ? <button

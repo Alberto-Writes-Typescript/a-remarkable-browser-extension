@@ -2,6 +2,7 @@ import { type PairMessageResponsePayload } from '../../background/messages/pair'
 import { sendToBackground } from '@plasmohq/messaging'
 import { Storage } from '@plasmohq/storage'
 import { useEffect, useState } from 'react'
+import {GetConfigurationMessageResponsePayload} from "~src/background/messages/getConfiguration";
 
 export default function UnpairDebuggerComponent (): React.ReactElement {
   const [deviceToken, setDeviceToken] = useState('')
@@ -15,8 +16,8 @@ export default function UnpairDebuggerComponent (): React.ReactElement {
       setRetrievingDeviceToken(true)
 
       try {
-        const response: PairMessageResponsePayload = await sendToBackground({ name: 'getConfiguration' })
-        setDeviceToken(response.deviceToken || '')
+        const response: GetConfigurationMessageResponsePayload = await sendToBackground({ name: 'getConfiguration' })
+        setDeviceToken(response.deviceToken ?? '')
       } finally {
         setRetrievingDeviceToken(false)
       }

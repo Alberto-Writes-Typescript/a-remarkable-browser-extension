@@ -1,5 +1,4 @@
 import { RemarkableClient } from 'a-remarkable-js-sdk'
-import { SecureStorage } from '@plasmohq/storage/secure'
 import { Storage } from '@plasmohq/storage'
 import { v4 as uuidv4 } from 'uuid'
 

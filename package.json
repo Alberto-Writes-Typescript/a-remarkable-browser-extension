@@ -22,7 +22,7 @@
   "dependencies": {
     "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.9.3",
-    "a-remarkable-js-sdk": "^0.4.1",
+    "a-remarkable-js-sdk": "^0.4.3",
     "cross-fetch": "^4.0.0",
     "plasmo": "0.85.2",
     "react": "18.2.0",

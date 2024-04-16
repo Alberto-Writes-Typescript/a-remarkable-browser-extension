@@ -17,11 +17,11 @@ export default class ConnectionManager {
   }
 
   async deviceToken (): Promise<string | undefined> {
-    return this.#tokenStore.get('deviceToken')
+    return await this.#tokenStore.get('deviceToken')
   }
 
   async sessionToken (): Promise<string | undefined> {
-    return this.#tokenStore.get('sessionToken')
+    return await this.#tokenStore.get('sessionToken')
   }
 
   async pair (oneTimeCode: string): Promise<string> {
@@ -37,7 +37,7 @@ export default class ConnectionManager {
       await this.#reMarkableClient.pair(uuidv4(), 'browser-chrome', oneTimeCode)
     }
 
-    this.#tokenStore.set('deviceToken', this.#reMarkableClient.device.token)
+    await this.#tokenStore.set('deviceToken', this.#reMarkableClient.device.token)
 
     return this.#reMarkableClient.device.token
   }
@@ -58,7 +58,7 @@ export default class ConnectionManager {
 
     await this.#reMarkableClient.connect()
 
-    this.#tokenStore.set('sessionToken', this.#reMarkableClient.session.token)
+    await this.#tokenStore.set('sessionToken', this.#reMarkableClient.session.token)
 
     return this.#reMarkableClient.session.token
   }

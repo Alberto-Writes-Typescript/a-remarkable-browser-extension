@@ -3,6 +3,7 @@ import PairDebuggerComponent from './PairDebuggerComponent'
 import ConnectDebuggerComponent from './ConnectDebuggerComponent'
 import UnpairDebuggerComponent from './UnpairDebuggerComponent'
 import DisconnectDebuggerComponent from './DisconnectDebuggerComponent'
+import UploadDebuggerComponent from './UploadDebuggerComponent'
 
 export default function DashboardComponent (): React.ReactElement {
   return (
@@ -16,6 +17,7 @@ export default function DashboardComponent (): React.ReactElement {
         <UnpairDebuggerComponent/>
         <ConnectDebuggerComponent/>
         <DisconnectDebuggerComponent/>
+        <UploadDebuggerComponent/>
       </div>
     </div>
   )

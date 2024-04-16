@@ -9,9 +9,11 @@ const STORAGE_MAPS = {
 export class NoDeviceTokenError extends Error {}
 
 export default class ConfigurationManager {
-  async initialize (): Promise<ConfigurationManager> {
-    const deviceToken = await this.#storage.get(STORAGE_MAPS.deviceToken)
-    const sessionToken = await this.#storage.get(STORAGE_MAPS.sessionToken)
+  static async initialize (): Promise<ConfigurationManager> {
+    const storage = new Storage()
+
+    const deviceToken = await storage.get(STORAGE_MAPS.deviceToken)
+    const sessionToken = await storage.get(STORAGE_MAPS.sessionToken)
 
     const configurationManager = new ConfigurationManager(deviceToken, sessionToken)
 
@@ -56,7 +58,7 @@ export default class ConfigurationManager {
     return this.#sessionToken
   }
 
-  async setDeviceToken (deviceToken: string): Promise<void> {
+  async setDeviceToken (deviceToken?: string): Promise<void> {
     await this.#storage.set(STORAGE_MAPS.deviceToken, deviceToken)
     await this.#storage.remove(STORAGE_MAPS.sessionToken)
 
@@ -66,7 +68,11 @@ export default class ConfigurationManager {
     this.#reMarkableClient = this.newRemarkableClient(this.#deviceToken)
   }
 
-  async setSessionToken (sessionToken: string): Promise<void> {
+  async removeDeviceToken (): Promise<void> {
+    await this.setDeviceToken()
+  }
+
+  async setSessionToken (sessionToken?: string): Promise<void> {
     if (this.#deviceToken == null) {
       throw new NoDeviceTokenError('Device token must be set before setting session token')
     }
@@ -75,6 +81,10 @@ export default class ConfigurationManager {
 
     this.#sessionToken = sessionToken
     this.#reMarkableClient = this.newRemarkableClient(this.#deviceToken, sessionToken)
+  }
+
+  async removeSessionToken (): Promise<void> {
+    await this.setSessionToken()
   }
 
   async reset (): Promise<void> {

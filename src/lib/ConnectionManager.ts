@@ -1,69 +1,33 @@
-import { RemarkableClient } from 'a-remarkable-js-sdk'
-import { Storage } from '@plasmohq/storage'
+import RemarkableManager from './RemarkableManager'
 import { v4 as uuidv4 } from 'uuid'
 
-export default class ConnectionManager {
-  #reMarkableClient: RemarkableClient
+export class NoDevicePairedError extends Error {}
 
-  readonly #tokenStore: Storage
-
-  constructor () {
-    this.#tokenStore = new Storage()
-    this.#reMarkableClient = RemarkableClient.withFetchHttpClient()
-  }
-
-  get remarkableClient (): RemarkableClient {
-    return this.#reMarkableClient
-  }
-
-  async deviceToken (): Promise<string | undefined> {
-    return await this.#tokenStore.get('deviceToken')
-  }
-
-  async sessionToken (): Promise<string | undefined> {
-    return await this.#tokenStore.get('sessionToken')
-  }
-
+export default class ConnectionManager extends RemarkableManager {
   async pair (oneTimeCode: string): Promise<string> {
-    const deviceToken = await this.deviceToken()
+    await this.remarkableClient.pair(uuidv4(), 'browser-chrome', oneTimeCode)
+    // TODO: device token should be returned after pairing, here the connection manager knows too much
+    await this.configurationManager.setDeviceToken(this.remarkableClient.device.token)
 
-    if (deviceToken != null) {
-      this.#reMarkableClient = RemarkableClient.withFetchHttpClient(deviceToken)
-
-      return this.#reMarkableClient.device.token
-    }
-
-    if (!this.#reMarkableClient.paired) {
-      await this.#reMarkableClient.pair(uuidv4(), 'browser-chrome', oneTimeCode)
-    }
-
-    await this.#tokenStore.set('deviceToken', this.#reMarkableClient.device.token)
-
-    return this.#reMarkableClient.device.token
+    return this.remarkableClient.device.token
   }
 
   async unpair (): Promise<void> {
-    await this.#tokenStore.remove('deviceToken')
+    await this.configurationManager.removeDeviceToken()
   }
 
   async connect (): Promise<string> {
-    const deviceToken = await this.deviceToken()
-    const sessionToken = await this.sessionToken()
-
-    this.#reMarkableClient = RemarkableClient.withFetchHttpClient(deviceToken, sessionToken)
-
-    if (!this.#reMarkableClient.sessionExpired) {
-      return this.#reMarkableClient.session.token
+    if (!this.remarkableClient.paired) {
+      throw new NoDevicePairedError('Impossible to connect with reMarkable Cloud: extension not paired')
     }
 
-    await this.#reMarkableClient.connect()
+    await this.remarkableClient.connect()
+    await this.configurationManager.setSessionToken(this.remarkableClient.session.token)
 
-    await this.#tokenStore.set('sessionToken', this.#reMarkableClient.session.token)
-
-    return this.#reMarkableClient.session.token
+    return this.remarkableClient.session.token
   }
 
   async disconnect (): Promise<void> {
-    await this.#tokenStore.remove('sessionToken')
+    await this.configurationManager.removeSessionToken()
   }
 }

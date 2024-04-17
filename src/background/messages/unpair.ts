@@ -1,12 +1,21 @@
-import ConnectionManager from '../../lib/ConnectionManager'
 import type { PlasmoMessaging } from '@plasmohq/messaging'
+import Message from '../../lib/utils/Message'
+
+export interface UnpairMessageResponsePayload {
+  removedDeviceToken: string | undefined
+}
+
+class UnpairMessage extends Message {
+  protected async process (request: PlasmoMessaging.Request): Promise<UnpairMessageResponsePayload> {
+    const removedDeviceToken = await this.configurationManager.deviceToken()
+    await this.connectionManager.unpair()
+    return { removedDeviceToken }
+  }
+}
 
 const handler: PlasmoMessaging.MessageHandler = async (request, response) => {
-  const connectionManager = new ConnectionManager()
-
-  await connectionManager.unpair()
-
-  response.send({})
+  const message = new UnpairMessage()
+  await message.handle(request, response)
 }
 
 export default handler

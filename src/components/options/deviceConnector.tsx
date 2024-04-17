@@ -1,12 +1,34 @@
-import React from 'react'
+import { type Device } from 'a-remarkable-js-sdk'
 import Heading from '../common/heading'
 import Button from '../common/button'
+import React, { useState } from 'react'
 
-function DeviceConnector (): React.ReactElement {
+interface DeviceConnectorProps {
+  pairDevice: (oneTimeCode: string) => Promise<Device | null>
+}
+
+function DeviceConnector ({ pairDevice }: DeviceConnectorProps): React.ReactElement {
+  const [oneTimeCode, setOneTimeCode] = React.useState<string>('')
+  const [pairing, setPairing] = useState<boolean>(false)
+
+  function validOneTimeCode (code): boolean {
+    return code.length === 8
+  }
+
+  async function submitOneTimeCode ({ target: { value } }): Promise<void> {
+    setOneTimeCode(value as string)
+
+    if (validOneTimeCode(value)) {
+      setPairing(true)
+      await pairDevice(oneTimeCode)
+      setPairing(false)
+    }
+  }
+
   return (
     <div className="h-full w-[90%] flex flex-col items-center justify-center gap-10 m-auto">
       <Heading>Let's pair with your device</Heading>
-      <p className= "text-sm font-normal text-gray-600 text-justified">
+      <p className="text-sm font-normal text-gray-600 text-justified">
         To upload web documents your reMarkable tablet, you need to pair
         this extension with your reMarkable account. Request a one time
         code and paste it here create a connection between the device
@@ -18,13 +40,19 @@ function DeviceConnector (): React.ReactElement {
       </Button>
 
       <div className="flex flex-col space-y-1 items-center">
-        <input name="one-time-code" className="
-          p-2 bg-transparent border border-gray-600 text-sm text-gray-600 text-center
-          transition-all
-          focus:border-gray-700 focus:bg-gray-100 focus:outline-none focus:ring-0
-          hover:border-gray-700 hover:bg-gray-100
-        "/>
-        <label htmlFor="one-time-code" className="text-xs italic">paste your code here</label>
+        <input name="one-time-code"
+               value={oneTimeCode}
+               disabled={pairing}
+               onChange={submitOneTimeCode}
+               className="
+                  p-2 bg-transparent border border-gray-600 text-sm text-gray-600 text-center
+                  transition-all
+                  focus:border-gray-700 focus:bg-gray-100 focus:outline-none focus:ring-0
+                  hover:border-gray-700 hover:bg-gray-100
+                "/>
+        <label htmlFor="one-time-code" className="text-xs italic">
+          { pairing ? 'pairing with your device...' : 'paste your code here' }
+        </label>
       </div>
     </div>
   )

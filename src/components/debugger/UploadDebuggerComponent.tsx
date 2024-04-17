@@ -8,7 +8,7 @@ export default function PairDebuggerComponent (): React.ReactElement {
   const [documentReference, setDocumentReference] = useState<DocumentReference | null>(null)
   const [uploadingDocument, setUploadingDocument] = useState<boolean>(false)
 
-  async function uploadDocument () {
+  async function uploadDocument (): Promise<void> {
     setUploadingDocument(true)
 
     try {

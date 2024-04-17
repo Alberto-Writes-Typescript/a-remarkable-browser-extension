@@ -28,6 +28,21 @@ const config: StorybookConfig = {
   docs: {
     autodocs: "tag",
   },
+  webpackFinal: async (config, { configType }) => {
+    /**
+     * Disabling all node dependencies from `a-remarkable-js-sdk` that are not
+     * available in the browser environment. The fallback makes webpacker ignore
+     * those dependencies and not try to bundle them.
+     */
+    // @ts-ignore
+    config.resolve.fallback = {
+      https: false,
+      fs: false
+    }
+
+    // Return the altered config
+    return config;
+  }
 }
 
 export default config

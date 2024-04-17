@@ -13,7 +13,6 @@ import { type RemarkableClient } from 'a-remarkable-js-sdk'
  * a { @link ConfigurationManager } instance.
  */
 export default class RemarkableManager {
-
   readonly #configurationManager: ConfigurationManager
 
   constructor () {

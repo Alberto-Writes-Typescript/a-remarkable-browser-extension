@@ -1,8 +1,7 @@
-import { type PairMessageResponsePayload } from '../../background/messages/pair'
 import { sendToBackground } from '@plasmohq/messaging'
 import { Storage } from '@plasmohq/storage'
 import { useEffect, useState } from 'react'
-import {GetConfigurationMessageResponsePayload} from "~src/background/messages/getConfiguration";
+import { type GetConfigurationMessageResponsePayload } from '~src/background/messages/getConfiguration'
 
 export default function UnpairDebuggerComponent (): React.ReactElement {
   const [deviceToken, setDeviceToken] = useState('')

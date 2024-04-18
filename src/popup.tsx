@@ -21,7 +21,7 @@ function IndexPopup (): React.ReactElement {
   }, [])
 
   return (
-    <div className="min-w-[500px] mx-4 my-4 px-8 py-6 bg-gray-50 border border-gray-400">
+    <div className="min-w-[500px] mx-4 my-4 px-6 py-6 bg-gray-50 border border-gray-400">
       { device != null ? <Dashboard device={device}/> : <Welcome/> }
     </div>
   )

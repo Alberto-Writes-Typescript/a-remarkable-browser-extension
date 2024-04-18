@@ -1,7 +1,8 @@
-import { type Device } from 'a-remarkable-js-sdk'
-import Heading from '../common/heading'
-import Button from '../common/button'
 import React, { useState } from 'react'
+import { type Device } from 'a-remarkable-js-sdk'
+import Button from '../common/button'
+import Heading from '../common/heading'
+import Input from '../common/input'
 
 interface DeviceConnectorProps {
   pair: (oneTimeCode: string) => Promise<Device | null>
@@ -49,16 +50,10 @@ function DeviceConnector ({ pair }: DeviceConnectorProps): React.ReactElement {
       </Button>
 
       <div className="flex flex-col space-y-1 items-center">
-        <input name="one-time-code"
-               value={oneTimeCode}
+        <Input variant="oneTimeCode"
                disabled={pairing}
-               onChange={submitOneTimeCode}
-               className="
-                  p-2 bg-transparent border border-gray-600 text-sm text-gray-600 text-center
-                  transition-all
-                  focus:border-gray-700 focus:bg-gray-100 focus:outline-none focus:ring-0
-                  hover:border-gray-700 hover:bg-gray-100
-                "/>
+               value={oneTimeCode}
+               onChange={submitOneTimeCode}/>
         <label htmlFor="one-time-code" className="text-xs italic">
           {
             retryPairing

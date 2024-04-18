@@ -19,7 +19,7 @@ function Dashboard ({ device }: DashboardProps): React.ReactElement {
 
       <Heading as="h3">upload document</Heading>
 
-      <div className="flex flex-col gap-10 text-sm border border-gray-500 p-4">
+      <div className="flex flex-col gap-10 text-smp-4">
         <div className="inline-flex gap-6 divide-x-[1px] divide-gray-700">
           <div className="flex-1 space-y-4">
             <div className="flex flex-col">

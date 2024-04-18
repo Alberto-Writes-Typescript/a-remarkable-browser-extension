@@ -4,11 +4,12 @@ import Button from '../common/button'
 import React, { useState } from 'react'
 
 interface DeviceConnectorProps {
-  pairDevice: (oneTimeCode: string) => Promise<Device | null>
+  pair: (oneTimeCode: string) => Promise<Device | null>
 }
 
-function DeviceConnector ({ pairDevice }: DeviceConnectorProps): React.ReactElement {
+function DeviceConnector ({ pair }: DeviceConnectorProps): React.ReactElement {
   const [oneTimeCode, setOneTimeCode] = React.useState<string>('')
+  const [retryPairing, setRetryPairing] = React.useState<boolean>(false)
   const [pairing, setPairing] = useState<boolean>(false)
 
   function validOneTimeCode (code): boolean {
@@ -16,12 +17,20 @@ function DeviceConnector ({ pairDevice }: DeviceConnectorProps): React.ReactElem
   }
 
   async function submitOneTimeCode ({ target: { value } }): Promise<void> {
+    setRetryPairing(false)
     setOneTimeCode(value as string)
 
     if (validOneTimeCode(value)) {
       setPairing(true)
-      await pairDevice(oneTimeCode)
-      setPairing(false)
+
+      try {
+        await pair(value as string)
+      } catch (error) {
+        setPairing(false)
+        setRetryPairing(true)
+      } finally {
+        setPairing(false)
+      }
     }
   }
 
@@ -51,7 +60,13 @@ function DeviceConnector ({ pairDevice }: DeviceConnectorProps): React.ReactElem
                   hover:border-gray-700 hover:bg-gray-100
                 "/>
         <label htmlFor="one-time-code" className="text-xs italic">
-          { pairing ? 'pairing with your device...' : 'paste your code here' }
+          {
+            retryPairing
+              ? 'something went wrong during pairing, please try again'
+              : pairing
+                ? 'pairing with your device...'
+                : 'paste your code here'
+          }
         </label>
       </div>
     </div>

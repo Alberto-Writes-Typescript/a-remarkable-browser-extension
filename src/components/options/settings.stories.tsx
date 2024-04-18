@@ -5,4 +5,11 @@ export default {
   component: settings
 }
 
-export const Default = {}
+export const Default = {
+  args: {
+    device: {
+      id: '4b9794f4-37e4-4ce8-87fd-b62abbaf0ade',
+      connectedAt: '12.12.2024'
+    }
+  }
+}

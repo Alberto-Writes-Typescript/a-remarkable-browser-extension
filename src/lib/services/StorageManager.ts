@@ -1,5 +1,7 @@
 import { Storage } from '@plasmohq/storage'
 
+export const DEFAULT_NAMESPACE = 'default'
+
 export default class StorageManager {
   readonly #store: Storage
   readonly #namespace?: string
@@ -10,10 +12,8 @@ export default class StorageManager {
   ) {
     this.#store = store
 
-    if (namespace != null) {
-      this.#namespace = namespace
-      this.#store.setNamespace(namespace)
-    }
+    this.#namespace = namespace ?? DEFAULT_NAMESPACE
+    this.#store.setNamespace(this.#namespace)
   }
 
   async get (key: string): Promise<unknown> {
@@ -29,12 +29,11 @@ export default class StorageManager {
     await this.#store.remove(key)
   }
 
-  private async storeMap (): Promise<Record<string, string>> {
-    return await this.#store.getAll()
-  }
+  async clear (): Promise<void> {
+    const storeNamespace = await this.#store.getAll()
 
-  private async has (key: string): Promise<boolean> {
-    const storeMap = await this.storeMap()
-    return key in storeMap
+    await Promise.all(
+      Object.keys(storeNamespace).map(async key => { await this.remove(key) })
+    )
   }
 }

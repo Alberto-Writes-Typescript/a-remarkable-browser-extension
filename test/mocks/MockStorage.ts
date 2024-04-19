@@ -23,7 +23,6 @@ export default class MockStorage {
     if (key in this.#store) {
       return JSON.parse(this.#store[key])
     } else {
-      console.log('me llama')
       return undefined
     }
   }
@@ -37,8 +36,13 @@ export default class MockStorage {
    * @param value
    */
   async set (key: string, value: unknown): Promise<null> {
-    this.#store.key = JSON.stringify(value)
+    this.#store[key] = JSON.stringify(value)
     return null
+  }
+
+  async remove (key: string): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete this.#store[key]
   }
 
   async getAll (): Promise<Record<string, string>> {

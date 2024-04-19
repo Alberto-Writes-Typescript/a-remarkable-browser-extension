@@ -1,17 +1,21 @@
 import { RemarkableClient } from 'a-remarkable-js-sdk'
 import { Storage } from '@plasmohq/storage'
+import { NoDevicePairedError } from '../errors'
 
-const STORAGE_MAPS = {
+export const STORAGE_MAPS = {
   deviceToken: 'deviceToken',
   sessionToken: 'sessionToken'
 }
 
-export class NoDeviceTokenError extends Error {}
-
 /**
- * Manages reMarkable Cloud user credentials and other
- * extension parameters. Provides a single point for
- * `RemarkableManager`s to access user's information.
+ * Interface for extension configuration management
+ *
+ * The class provides a single endpoint for the extension
+ * services to persist and retrieve extension configuration
+ * parameters. Underneath, the service uses the browser
+ * extension internal storage to persist the parameters.
+ *
+ * Use the class
  */
 export default class ConfigurationManager {
   readonly #storage: Storage
@@ -49,7 +53,7 @@ export default class ConfigurationManager {
     const deviceToken = await this.deviceToken()
 
     if (deviceToken == null) {
-      throw new NoDeviceTokenError('Device token must be set before setting session token')
+      throw new NoDevicePairedError('Device token must be set before setting session token')
     }
 
     await this.#storage.set(STORAGE_MAPS.sessionToken, sessionToken)

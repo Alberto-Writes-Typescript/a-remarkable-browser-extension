@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv'
 import { enableFetchMocks } from 'jest-fetch-mock'
+import MockStorage from './mocks/MockStorage'
 
 /**
  * jest-fetch-mock Configuration
@@ -44,4 +45,12 @@ dotenv.config({ path: '.env.test' })
  */
 jest.mock('pify', () => {
   return async (): Promise<void> => { await Promise.resolve() }
+})
+
+/**
+ * Replaces Plasmo `Storage` class, which relies on the browser's
+ * extension storage API, with a mock implementation.
+ */
+jest.mock('@plasmohq/storage', () => {
+  return { Storage: jest.fn(async () => (await import('./mocks/MockStorage')).default) }
 })

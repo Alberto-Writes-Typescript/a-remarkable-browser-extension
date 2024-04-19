@@ -1,5 +1,6 @@
-import ConfigurationManager from '../ConfigurationManager'
-import { type RemarkableClient } from 'a-remarkable-js-sdk'
+import { RemarkableClient } from 'a-remarkable-js-sdk'
+import AuthenticationManager from '../AuthenticationManager'
+import { NoDevicePairedError } from '../../errors'
 
 /**
  * A `RemarkableManager` is a extension service which makes use
@@ -12,15 +13,11 @@ import { type RemarkableClient } from 'a-remarkable-js-sdk'
  * credentials and other relevant configuration parameters via
  * a { @link ConfigurationManager } instance.
  */
-export default class RemarkableManager {
-  readonly #configurationManager: ConfigurationManager
+export default abstract class RemarkableManager {
+  protected authenticationManager: AuthenticationManager
 
   constructor () {
-    this.#configurationManager = new ConfigurationManager()
-  }
-
-  get configurationManager (): ConfigurationManager {
-    return this.#configurationManager
+    this.authenticationManager = new AuthenticationManager()
   }
 
   /**
@@ -29,7 +26,21 @@ export default class RemarkableManager {
    * in all our `RemarkableManager`s to ensure we communicate with the
    * reMarkable Cloud according to the most up-to-date user credentials
    */
-  async remarkableClient (): Promise<RemarkableClient> {
-    return await this.configurationManager.remarkableClient()
+  protected async remarkableClient (): Promise<RemarkableClient> {
+    const deviceToken = await this.authenticationManager.deviceToken()
+    const sessionToken = await this.authenticationManager.sessionToken()
+
+    if (deviceToken == null) {
+      throw new NoDevicePairedError('A device token must be set before creating a remarkable client')
+    }
+
+    const client = new RemarkableClient(deviceToken, sessionToken)
+
+    if (client.sessionExpired) {
+      await client.connect()
+      await this.authenticationManager.setSessionToken(client.session.token)
+    }
+
+    return client
   }
 }

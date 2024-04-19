@@ -27,6 +27,20 @@ describe('StorageManager', () => {
 
       expect(await store.get('key')).toBe('new value')
     })
+
+    it('when namespace is provided, only returns keys from given namespace', async () => {
+      const store = new MockStorage() as unknown as Storage
+
+      await store.set('key', 'value')
+
+      let storageManager = new StorageManager(store)
+      expect(await storageManager.get('key')).toBe('value')
+
+      storageManager = new StorageManager(store, 'namespace')
+      await storageManager.set('key', 'another value')
+
+      expect(await storageManager.get('key')).toBe('another value')
+    })
   })
 
   describe('get', () => {
@@ -46,6 +60,20 @@ describe('StorageManager', () => {
 
       expect(await storageManager.get('key')).toBe(undefined)
     })
+
+    it('when namespace is provided, set key value pairs in namespace', async () => {
+      const store = new MockStorage() as unknown as Storage
+
+      await store.set('key', 'value')
+
+      const storageManager = new StorageManager(store, 'namespace')
+      await storageManager.set('otherKey', 'another value')
+
+      expect(await storageManager.get('otherKey')).toBe('another value')
+
+      const storeContent = await store.getAll()
+      expect(Object.keys(storeContent).includes('otherKey')).toBeFalsy()
+    })
   })
 
   describe('remove', () => {
@@ -59,6 +87,22 @@ describe('StorageManager', () => {
       await storageManager.remove('key')
 
       expect(await storageManager.get('key')).toBe(undefined)
+    })
+
+    it('when namespace is provided, only removes keys from given namespace', async () => {
+      const store = new MockStorage() as unknown as Storage
+
+      await store.set('key', 'value')
+
+      const storageManager = new StorageManager(store, 'namespace')
+      await storageManager.set('otherKey', 'another value')
+
+      const contentBeforeRemoval = { ...(await store.getAll()) }
+      await storageManager.remove('key')
+      expect(contentBeforeRemoval).toStrictEqual(await store.getAll())
+
+      await storageManager.remove('otherKey')
+      expect(contentBeforeRemoval).not.toStrictEqual(await store.getAll())
     })
   })
 })

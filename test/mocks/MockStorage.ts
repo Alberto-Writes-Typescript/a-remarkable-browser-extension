@@ -10,7 +10,15 @@
  * Use this mock for all storage-related tests in the extension.
  */
 export default class MockStorage {
+  #namespace?: string | undefined
+
   readonly #store: Record<string, string> = {}
+
+  constructor (namespace?: string) { this.setNamespace(namespace) }
+
+  setNamespace (namespace: string | undefined): void {
+    this.#namespace = namespace
+  }
 
   /**
    * Returns value from { @param key } if it exists in the store.
@@ -20,8 +28,10 @@ export default class MockStorage {
    * @returns The value associated with the key if it exists in the store.
    */
   async get (key: string): Promise<unknown | undefined> {
-    if (key in this.#store) {
-      return JSON.parse(this.#store[key])
+    const namespacedKey = this.namespacedKey(key)
+
+    if (namespacedKey in this.#store) {
+      return JSON.parse(this.#store[namespacedKey])
     } else {
       return undefined
     }
@@ -36,16 +46,21 @@ export default class MockStorage {
    * @param value
    */
   async set (key: string, value: unknown): Promise<null> {
-    this.#store[key] = JSON.stringify(value)
+    this.#store[this.namespacedKey(key)] = JSON.stringify(value)
     return null
   }
 
   async remove (key: string): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete this.#store[key]
+    console.log(this.#store, key, this.namespacedKey(key))
+    delete this.#store[this.namespacedKey(key)]
   }
 
   async getAll (): Promise<Record<string, string>> {
     return this.#store
+  }
+
+  private namespacedKey (key: string): string {
+    return this.#namespace != null ? `${this.#namespace}${key}` : key
   }
 }

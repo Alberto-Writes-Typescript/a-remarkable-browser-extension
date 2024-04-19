@@ -2,9 +2,18 @@ import { Storage } from '@plasmohq/storage'
 
 export default class StorageManager {
   readonly #store: Storage
+  readonly #namespace?: string
 
-  constructor (store: Storage = new Storage()) {
+  constructor (
+    store: Storage = new Storage(),
+    namespace?: string
+  ) {
     this.#store = store
+
+    if (namespace != null) {
+      this.#namespace = namespace
+      this.#store.setNamespace(namespace)
+    }
   }
 
   async get (key: string): Promise<unknown> {
@@ -17,7 +26,7 @@ export default class StorageManager {
   }
 
   async remove (key: string): Promise<void> {
-    if (await this.has(key)) await this.#store.remove(key)
+    await this.#store.remove(key)
   }
 
   private async storeMap (): Promise<Record<string, string>> {

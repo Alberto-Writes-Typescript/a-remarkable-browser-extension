@@ -1,20 +1,19 @@
-import React, {useEffect, useState} from 'react'
+import { sendToBackground } from '@plasmohq/messaging'
+import React, { useEffect, useState } from 'react'
 import Dashboard from './components/popup/dashboard'
 import Welcome from './components/popup/welcome'
 
 import '../assets/css/style.css'
-import ConfigurationManager from './lib/services/ConfigurationManager'
 import { Device } from 'a-remarkable-js-sdk'
+import { type GetConfigurationMessageResponsePayload } from './background/messages/getConfiguration'
 
 function IndexPopup (): React.ReactElement {
   const [device, setDevice] = useState<Device | null>(null)
 
   useEffect(() => {
     async function fetchDeviceFromConfiguration (): Promise<void> {
-      const configurationManager = new ConfigurationManager()
-      const deviceToken = await configurationManager.deviceToken()
-
-      if (deviceToken != null) setDevice(new Device(deviceToken))
+      const getConfigrationResponse: GetConfigurationMessageResponsePayload = await sendToBackground({ name: 'getConfiguration' })
+      if (getConfigrationResponse.deviceToken != null) setDevice(new Device(getConfigrationResponse.deviceToken))
     }
 
     void fetchDeviceFromConfiguration().then(r => {})

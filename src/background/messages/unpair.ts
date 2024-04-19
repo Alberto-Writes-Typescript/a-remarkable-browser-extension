@@ -7,8 +7,8 @@ export interface UnpairMessageResponsePayload {
 
 class UnpairMessage extends Message {
   protected async process (request: PlasmoMessaging.Request): Promise<UnpairMessageResponsePayload> {
-    const removedDeviceToken = await this.configurationManager.deviceToken()
-    await this.connectionManager.unpair()
+    const removedDeviceToken = await this.authenticationManager.deviceToken()
+    await this.pairManager.unpair()
     return { removedDeviceToken }
   }
 }

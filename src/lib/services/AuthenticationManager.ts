@@ -56,9 +56,18 @@ export default class AuthenticationManager {
       throw new InvalidDeviceTokenError('Device token is not a JWT reMarkable device token')
     }
 
-    await this.clearDeviceInformation()
+    await this.removeCurrentDevice()
     await this.#storeManager.set(AUTHENTICATION_KEYS.deviceToken, deviceToken)
     return deviceToken
+  }
+
+  /**
+   * Removes all information related to current device from browser storage
+   *
+   * @private
+   */
+  async removeCurrentDevice (): Promise<void> {
+    await this.#storeManager.clear()
   }
 
   async sessionToken (): Promise<string | undefined> {
@@ -89,13 +98,5 @@ export default class AuthenticationManager {
     await this.#storeManager.set(AUTHENTICATION_KEYS.sessionToken, sessionToken)
 
     return sessionToken
-  }
-
-  /**
-   * Removes all information related to current device from browser storage
-   * @private
-   */
-  private async clearDeviceInformation (): Promise<void> {
-    await this.#storeManager.clear()
   }
 }

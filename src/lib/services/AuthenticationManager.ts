@@ -1,9 +1,14 @@
-import { Device, FetchClient, Session } from 'a-remarkable-js-sdk'
+import { Device, Session } from 'a-remarkable-js-sdk'
 import { Storage } from '@plasmohq/storage'
-import { NoDevicePairedError, UnknownSessionDeviceError } from '../errors'
+import {
+  InvalidDeviceTokenError,
+  InvalidSessionTokenError,
+  NoDevicePairedError,
+  UnknownSessionDeviceError
+} from '../errors'
 import StorageManager from './StorageManager'
 
-export const REMARKABLE_STORAGE_NAMESPACE = 'remarkable'
+export const DEVICE_STORAGE_NAMESPACE = 'remarkable'
 
 export const AUTHENTICATION_KEYS: Record<string, string> = {
   deviceToken: 'deviceToken',
@@ -25,7 +30,7 @@ export default class AuthenticationManager {
   readonly #storeManager: StorageManager
 
   constructor (storeManager?: StorageManager) {
-    this.#storeManager = storeManager ?? new StorageManager(new Storage(), REMARKABLE_STORAGE_NAMESPACE)
+    this.#storeManager = storeManager ?? new StorageManager(new Storage(), DEVICE_STORAGE_NAMESPACE)
   }
 
   async deviceToken (): Promise<string | undefined> {
@@ -43,7 +48,14 @@ export default class AuthenticationManager {
    * from other devices in the system.
    */
   async setNewDevice (deviceToken: string): Promise<string> {
-    // TODO: I should validate the device token is an actual JWT token with Device info
+    try {
+      // TODO: add token validator to `Device` class
+      // eslint-disable-next-line no-new
+      new Device(deviceToken)
+    } catch (error) {
+      throw new InvalidDeviceTokenError('Device token is not a JWT reMarkable device token')
+    }
+
     await this.clearDeviceInformation()
     await this.#storeManager.set(AUTHENTICATION_KEYS.deviceToken, deviceToken)
     return deviceToken
@@ -54,15 +66,21 @@ export default class AuthenticationManager {
   }
 
   async setSessionToken (sessionToken: string): Promise<string> {
-    // TODO: I should validate the device token is an actual JWT token with Device info
     const deviceToken = await this.deviceToken()
 
     if (deviceToken == null) {
       throw new NoDevicePairedError('A session token can only be set after a device token')
     }
 
-    const device = new Device(deviceToken, FetchClient)
-    const session = new Session(sessionToken)
+    const device = new Device(deviceToken)
+
+    let session: Session
+
+    try {
+      session = new Session(sessionToken)
+    } catch (error) {
+      throw new InvalidSessionTokenError('Session token is not a JWT reMarkable session token')
+    }
 
     if (device.id !== session.deviceId) {
       throw new UnknownSessionDeviceError('Session token does not belong to the current device')
@@ -78,11 +96,6 @@ export default class AuthenticationManager {
    * @private
    */
   private async clearDeviceInformation (): Promise<void> {
-    // TODO: Use namespace instead of removing all authentication keys
-    await Promise.all(
-      Object.values(AUTHENTICATION_KEYS).map(async key => {
-        await this.#storeManager.remove(key)
-      })
-    )
+    await this.#storeManager.clear()
   }
 }

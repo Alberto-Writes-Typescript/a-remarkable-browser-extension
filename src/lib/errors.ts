@@ -15,3 +15,15 @@ export class SessionExpiredError extends Error {}
  * to the current device.
  */
 export class UnknownSessionDeviceError extends Error {}
+
+/**
+ * Triggered when a given token as device token does not resemble
+ * an actual JWT device token.
+ */
+export class InvalidDeviceTokenError extends Error {}
+
+/**
+ * Triggered when a given token as session token does not resemble
+ * an actual JWT session token.
+ */
+export class InvalidSessionTokenError extends Error {}

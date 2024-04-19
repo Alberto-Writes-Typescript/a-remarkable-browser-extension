@@ -1,15 +1,26 @@
 import { Device, FetchClient, Session } from 'a-remarkable-js-sdk'
 import { type Storage } from '@plasmohq/storage'
-import AuthenticationManager, { AUTHENTICATION_KEYS } from '../../../src/lib/services/AuthenticationManager'
-import { NoDevicePairedError, UnknownSessionDeviceError } from '../../../src/lib/errors'
+import AuthenticationManager, {
+  AUTHENTICATION_KEYS,
+  DEVICE_STORAGE_NAMESPACE
+} from '../../../src/lib/services/AuthenticationManager'
+import { InvalidDeviceTokenError, InvalidSessionTokenError, NoDevicePairedError, UnknownSessionDeviceError } from '../../../src/lib/errors'
 import StorageManager from '../../../src/lib/services/StorageManager'
 import MockStorage from '../../mocks/MockStorage'
 
+const TEST_STORAGE_NAMESPACE = 'test'
+
 describe('AuthenticationManager', () => {
   let storageManager: StorageManager
+  let store: Storage
 
-  beforeEach(() => {
-    const store = new MockStorage() as unknown as Storage
+  beforeEach(async () => {
+    store = new MockStorage() as unknown as Storage
+
+    // Seed storage test namespace to verify data is not wiped out during device registering
+    store.setNamespace(TEST_STORAGE_NAMESPACE)
+    await store.set('key', 'value')
+
     storageManager = new StorageManager(store)
   })
 
@@ -33,26 +44,42 @@ describe('AuthenticationManager', () => {
 
   describe('setNewDevice', () => {
     it('sets device token', async () => {
+      const deviceToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoMC11c2VyaWQiOiJhdXRoMHw1ZWZjMjg3ZmM0ODgwMTAwMTM0NGY5MjMiLCJkZXZpY2UtZGVzYyI6ImJyb3dzZXItY2hyb21lIiwiZGV2aWNlLWlkIjoiYmUwYzlmNGQtY2RjYi00MDVmLTk3NDQtZjgzNzJjYjdlNTlkIiwiaWF0IjoxNzEzMTY4NzE2LCJpc3MiOiJyTSBXZWJBcHAiLCJqdGkiOiJjazB0dHVzbTA5RT0iLCJuYmYiOjE3MTMxNjg3MTYsInN1YiI6InJNIERldmljZSBUb2tlbiJ9.48dxqxXSbiaAbpnnU7TUWgzGHGd-bQNHiesZQFfWbxU'
+
       const authenticationManager = new AuthenticationManager(storageManager)
 
-      await authenticationManager.setNewDevice('deviceToken')
+      await authenticationManager.setNewDevice(deviceToken)
 
-      expect(await authenticationManager.deviceToken()).toBe('deviceToken')
+      expect(await authenticationManager.deviceToken()).toBe(deviceToken)
     })
 
     it('if there is information stored from a previous device, removes it from storage', async () => {
-      await storageManager.set(AUTHENTICATION_KEYS.deviceToken, 'previousDeviceToken')
-      await storageManager.set(AUTHENTICATION_KEYS.sessionToken, 'previousSessionToken')
-
-      expect(await storageManager.get(AUTHENTICATION_KEYS.deviceToken)).toBe('previousDeviceToken')
-      expect(await storageManager.get(AUTHENTICATION_KEYS.sessionToken)).toBe('previousSessionToken')
+      const deviceToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoMC11c2VyaWQiOiJhdXRoMHw1ZWZjMjg3ZmM0ODgwMTAwMTM0NGY5MjMiLCJkZXZpY2UtZGVzYyI6ImJyb3dzZXItY2hyb21lIiwiZGV2aWNlLWlkIjoiYmUwYzlmNGQtY2RjYi00MDVmLTk3NDQtZjgzNzJjYjdlNTlkIiwiaWF0IjoxNzEzMTY4NzE2LCJpc3MiOiJyTSBXZWJBcHAiLCJqdGkiOiJjazB0dHVzbTA5RT0iLCJuYmYiOjE3MTMxNjg3MTYsInN1YiI6InJNIERldmljZSBUb2tlbiJ9.48dxqxXSbiaAbpnnU7TUWgzGHGd-bQNHiesZQFfWbxU'
+      const sessionToken = 'eyJhbGciOiJIUzI1NiIsImtpZCI6IjEiLCJ0eXAiOiJKV1QifQ.eyJhdXRoMC1wcm9maWxlIjp7IlVzZXJJRCI6ImF1dGgwfDVlZmMyODdmYzQ4ODAxMDAxMzQ0ZjkyMyIsIklzU29jaWFsIjpmYWxzZSwiQ29ubmVjdGlvbiI6IlVzZXJuYW1lLVBhc3N3b3JkLUF1dGhlbnRpY2F0aW9uIiwiTmFtZSI6InBhc2N1MjE2QGdtYWlsLmNvbSIsIk5pY2tuYW1lIjoicGFzY3UyMTYiLCJHaXZlbk5hbWUiOiIiLCJGYW1pbHlOYW1lIjoiIiwiRW1haWwiOiJwYXNjdTIxNkBnbWFpbC5jb20iLCJFbWFpbFZlcmlmaWVkIjp0cnVlLCJDcmVhdGVkQXQiOiIyMDIwLTA3LTAxVDA2OjA5OjAzLjk0M1oiLCJVcGRhdGVkQXQiOiIyMDI0LTA0LTEwVDA2OjQ4OjQxLjUxWiJ9LCJiZXRhIjp0cnVlLCJkZXZpY2UtZGVzYyI6ImJyb3dzZXItY2hyb21lIiwiZGV2aWNlLWlkIjoiYmUwYzlmNGQtY2RjYi00MDVmLTk3NDQtZjgzNzJjYjdlNTlkIiwiZXhwIjoxNzEzMTc5NTIyLCJpYXQiOjE3MTMxNjg3MjIsImlzcyI6InJNIFdlYkFwcCIsImp0aSI6ImNrMHRZUFMxTGNJPSIsImxldmVsIjoiY29ubmVjdCIsIm5iZiI6MTcxMzE2ODcyMiwic2NvcGVzIjoiZG9jZWRpdCBod2NtYWlsOi0xIHN5bmM6dG9ydG9pc2UgaW50Z3IgbWFpbDotMSBzY3JlZW5zaGFyZSIsInN1YiI6ImF1dGgwfDVlZmMyODdmYzQ4ODAxMDAxMzQ0ZjkyMyJ9.Ik-gd9-Wgsu-42E_9NAu1W5ZeeJM6VzNJMNEAJTJX4M'
 
       const authenticationManager = new AuthenticationManager(storageManager)
+      await authenticationManager.setNewDevice(deviceToken)
+      await authenticationManager.setSessionToken(sessionToken)
 
-      await authenticationManager.setNewDevice('deviceToken')
+      const newDeviceToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoMC11c2VyaWQiOiJhdXRoMHw1ZWZjMjg3ZmM0ODgwMTAwMTM0NGY5MjMiLCJkZXZpY2UtZGVzYyI6ImJyb3dzZXItY2hyb21lIiwiZGV2aWNlLWlkIjoiMmVmMzFhMzAtNzc2Zi00N2EwLWIwODgtMjY0NzA2OTY2ZTUxIiwiaWF0IjoxNzEzNTE4NjU0LCJpc3MiOiJyTSBXZWJBcHAiLCJqdGkiOiJjazB0b2IvWEJNVT0iLCJuYmYiOjE3MTM1MTg2NTQsInN1YiI6InJNIERldmljZSBUb2tlbiJ9.F8mXEnr0NWiIKdCQpgSRa3jzajHZPqO8n647OLDyENw'
+      await authenticationManager.setNewDevice(newDeviceToken)
 
-      expect(await storageManager.get(AUTHENTICATION_KEYS.deviceToken)).not.toBe('previousDeviceToken')
-      expect(await storageManager.get(AUTHENTICATION_KEYS.sessionToken)).toBeUndefined()
+      const storageNamespace = DEVICE_STORAGE_NAMESPACE
+
+      // Wipes out the whole reMarkable namespace
+      store.setNamespace(storageNamespace)
+      expect(await store.getAll()).toStrictEqual({})
+
+      // Does not wipe other storage namespaces
+      store.setNamespace(TEST_STORAGE_NAMESPACE)
+      expect(await store.getAll()).toStrictEqual({ key: JSON.stringify('value') })
+    })
+
+    it('if given device token format is invalid, throws error', async () => {
+      const authenticationManager = new AuthenticationManager(storageManager)
+
+      await expect(authenticationManager.setNewDevice('deviceToken'))
+        .rejects.toThrow(InvalidDeviceTokenError)
     })
   })
 
@@ -112,6 +139,17 @@ describe('AuthenticationManager', () => {
 
       await expect(authenticationManager.setSessionToken('sessionToken'))
         .rejects.toThrow(NoDevicePairedError)
+    })
+
+    it('if given session token format is invalid, throws error', async () => {
+      const deviceToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoMC11c2VyaWQiOiJhdXRoMHw1ZWZjMjg3ZmM0ODgwMTAwMTM0NGY5MjMiLCJkZXZpY2UtZGVzYyI6ImJyb3dzZXItY2hyb21lIiwiZGV2aWNlLWlkIjoiYmUwYzlmNGQtY2RjYi00MDVmLTk3NDQtZjgzNzJjYjdlNTlkIiwiaWF0IjoxNzEzMTY4NzE2LCJpc3MiOiJyTSBXZWJBcHAiLCJqdGkiOiJjazB0dHVzbTA5RT0iLCJuYmYiOjE3MTMxNjg3MTYsInN1YiI6InJNIERldmljZSBUb2tlbiJ9.48dxqxXSbiaAbpnnU7TUWgzGHGd-bQNHiesZQFfWbxU'
+
+      const authenticationManager = new AuthenticationManager(storageManager)
+      await authenticationManager.setNewDevice(deviceToken)
+      expect(await authenticationManager.deviceToken()).toBe(deviceToken)
+
+      await expect(authenticationManager.setSessionToken('sessionToken'))
+        .rejects.toThrow(InvalidSessionTokenError)
     })
   })
 })

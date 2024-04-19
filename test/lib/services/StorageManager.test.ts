@@ -1,6 +1,6 @@
 import { type Storage } from '@plasmohq/storage'
 import MockStorage from '../../mocks/MockStorage'
-import StorageManager from '../../../src/lib/services/StorageManager'
+import StorageManager, { DEFAULT_NAMESPACE } from '../../../src/lib/services/StorageManager'
 
 describe('StorageManager', () => {
   describe('set', () => {
@@ -71,6 +71,7 @@ describe('StorageManager', () => {
 
       expect(await storageManager.get('otherKey')).toBe('another value')
 
+      store.setNamespace('default')
       const storeContent = await store.getAll()
       expect(Object.keys(storeContent).includes('otherKey')).toBeFalsy()
     })
@@ -103,6 +104,35 @@ describe('StorageManager', () => {
 
       await storageManager.remove('otherKey')
       expect(contentBeforeRemoval).not.toStrictEqual(await store.getAll())
+    })
+  })
+
+  describe('clear', () => {
+    it('removes all key value pairs from store', async () => {
+      const store = new MockStorage() as unknown as Storage
+
+      const storageManager = new StorageManager(store)
+      await storageManager.set('key', 'value')
+      await storageManager.set('otherKey', 'another value')
+
+      await storageManager.clear()
+
+      expect(await store.getAll()).toStrictEqual({})
+    })
+
+    it('when namespace is provided, only removes keys from given namespace', async () => {
+      const store = new MockStorage() as unknown as Storage
+
+      await store.set('key', 'value')
+
+      const storageManager = new StorageManager(store, 'namespace')
+      await storageManager.set('otherKey', 'another value')
+
+      await storageManager.clear()
+
+      expect(await store.getAll()).toStrictEqual({})
+      store.setNamespace(DEFAULT_NAMESPACE)
+      expect(await store.getAll()).toStrictEqual({ key: JSON.stringify('value') })
     })
   })
 })

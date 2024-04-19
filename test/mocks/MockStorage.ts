@@ -1,3 +1,5 @@
+import { DEFAULT_NAMESPACE } from '../../src/lib/services/StorageManager'
+
 /**
  * `Plasmo` { @link Storage } mock class
  *
@@ -10,13 +12,13 @@
  * Use this mock for all storage-related tests in the extension.
  */
 export default class MockStorage {
-  #namespace?: string | undefined
+  #namespace: string
 
   readonly #store: Record<string, string> = {}
 
-  constructor (namespace?: string) { this.setNamespace(namespace) }
+  constructor (namespace?: string) { this.setNamespace(namespace ?? DEFAULT_NAMESPACE) }
 
-  setNamespace (namespace: string | undefined): void {
+  setNamespace (namespace: string): void {
     this.#namespace = namespace
   }
 
@@ -52,12 +54,17 @@ export default class MockStorage {
 
   async remove (key: string): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    console.log(this.#store, key, this.namespacedKey(key))
     delete this.#store[this.namespacedKey(key)]
   }
 
   async getAll (): Promise<Record<string, string>> {
-    return this.#store
+    return Object.keys(this.#store)
+      .filter(key => key.startsWith(this.#namespace))
+      .reduce((result, key) => {
+        const strippedKey = key.replace(this.#namespace, '')
+        result[strippedKey] = this.#store[key]
+        return result
+      }, {})
   }
 
   private namespacedKey (key: string): string {

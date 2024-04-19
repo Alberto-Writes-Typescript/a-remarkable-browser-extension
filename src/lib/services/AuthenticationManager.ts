@@ -1,6 +1,9 @@
 import { Device, FetchClient, Session } from 'a-remarkable-js-sdk'
+import { Storage } from '@plasmohq/storage'
 import { NoDevicePairedError, UnknownSessionDeviceError } from '../errors'
 import StorageManager from './StorageManager'
+
+export const REMARKABLE_STORAGE_NAMESPACE = 'remarkable'
 
 export const AUTHENTICATION_KEYS: Record<string, string> = {
   deviceToken: 'deviceToken',
@@ -21,8 +24,8 @@ export const AUTHENTICATION_KEYS: Record<string, string> = {
 export default class AuthenticationManager {
   readonly #storeManager: StorageManager
 
-  constructor (storeManager: StorageManager = new StorageManager()) {
-    this.#storeManager = storeManager
+  constructor (storeManager?: StorageManager) {
+    this.#storeManager = storeManager ?? new StorageManager(new Storage(), REMARKABLE_STORAGE_NAMESPACE)
   }
 
   async deviceToken (): Promise<string | undefined> {

@@ -1,7 +1,7 @@
 import { type DocumentReference } from 'a-remarkable-js-sdk'
 import RemarkableManager from './RemarkableManager'
 import { WebPdfDocument } from '../../models/WebPdfDocument'
-import { NoDevicePairedError, SessionExpiredError } from '../../errors'
+import { NoDevicePairedError } from '../../errors'
 
 export default class UploadManager extends RemarkableManager {
   async upload (name: string, documentUrl: string): Promise<DocumentReference> {
@@ -11,9 +11,7 @@ export default class UploadManager extends RemarkableManager {
       throw new NoDevicePairedError('Impossible to connect with reMarkable Cloud: extension not paired')
     }
 
-    if (client.sessionExpired) {
-      throw new SessionExpiredError('Impossible to upload web document: session expired')
-    }
+    if (client.sessionExpired) await client.connect()
 
     const webDocument = await WebPdfDocument.initialize(documentUrl, name)
 

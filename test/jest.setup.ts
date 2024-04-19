@@ -33,3 +33,15 @@ fetchMock.disableMocks()
  * Load environment variables from .env.test file
  */
 dotenv.config({ path: '.env.test' })
+
+/**
+ * Plasmo mocks & polyfills
+ * ------------------------
+ */
+
+/**
+ * Fixes problem when importing @plasmohq/storage { @link Storage } in Jest
+ */
+jest.mock('pify', () => {
+  return async (): Promise<void> => { await Promise.resolve() }
+})

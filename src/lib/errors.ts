@@ -9,3 +9,9 @@ export class NoDevicePairedError extends Error {}
  * without having a valid session token.
  */
 export class SessionExpiredError extends Error {}
+
+/**
+ * Triggered when trying to set a session token that does not belong
+ * to the current device.
+ */
+export class UnknownSessionDeviceError extends Error {}

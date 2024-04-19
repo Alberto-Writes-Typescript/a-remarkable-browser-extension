@@ -1,16 +1,16 @@
 import { type PlasmoMessaging } from '@plasmohq/messaging'
-import ConfigurationManager from '../services/ConfigurationManager'
-import ConnectionManager from '../services/remarkable/ConnectionManager'
+import AuthenticationManager from '../../lib/services/AuthenticationManager'
+import PairManager from '../services/remarkable/PairManager'
 import UploadManager from '../services/remarkable/UploadManager'
 
 export default class Message {
-  protected readonly configurationManager: ConfigurationManager
-  protected readonly connectionManager: ConnectionManager
+  protected readonly authenticationManager: AuthenticationManager
+  protected readonly pairManager: PairManager
   protected readonly uploadManager: UploadManager
 
   constructor () {
-    this.configurationManager = new ConfigurationManager()
-    this.connectionManager = new ConnectionManager()
+    this.authenticationManager = new AuthenticationManager()
+    this.pairManager = new PairManager()
     this.uploadManager = new UploadManager()
   }
 

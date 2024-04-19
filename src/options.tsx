@@ -1,10 +1,12 @@
+import { sendToBackground } from '@plasmohq/messaging'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Device } from 'a-remarkable-js-sdk'
-import ConfigurationManager from './lib/services/ConfigurationManager'
-import ConnectionManager from './lib/services/remarkable/ConnectionManager'
 import DeviceConnector from './components/options/deviceConnector'
+import { type GetConfigurationMessageResponsePayload } from './background/messages/getConfiguration'
 import Layout from './components/options/layout'
+import { type PairMessageResponsePayload } from './background/messages/pair'
 import Settings from './components/options/settings'
+import { type UnpairMessageResponsePayload } from './background/messages/unpair'
 
 import '../assets/css/style.css'
 
@@ -12,35 +14,22 @@ function Options (): React.ReactElement {
   const [device, setDevice] = useState<Device | null>(null)
 
   const pair = useCallback(async (oneTimeCode: string): Promise<Device | null> => {
-    const connectionManager = new ConnectionManager()
-
-    try {
-      const deviceToken = await connectionManager.pair(oneTimeCode)
-
-      const device = new Device(deviceToken)
-
-      setDevice(device)
-
-      return device
-    } catch (error) {
-      return null
-    }
+    const pairResponse: PairMessageResponsePayload = await sendToBackground({ name: 'pair' })
+    const device = new Device(pairResponse.deviceToken)
+    setDevice(device)
+    return device
   }, [])
 
   const unpair = useCallback(async (): Promise<void> => {
-    const connectionManager = new ConnectionManager()
-
-    await connectionManager.unpair()
-
-    setDevice(null)
+    const unpairResponse: UnpairMessageResponsePayload = await sendToBackground({ name: 'unpair' })
+    if (unpairResponse.removedDeviceToken != null) setDevice(null)
   }, [])
 
   useEffect(() => {
     async function fetchDeviceFromConfiguration (): Promise<void> {
-      const configurationManager = new ConfigurationManager()
-      const deviceToken = await configurationManager.deviceToken()
+      const getConfigrationResponse: GetConfigurationMessageResponsePayload = await sendToBackground({ name: 'getConfiguration' })
 
-      if (deviceToken != null) setDevice(new Device(deviceToken))
+      if (getConfigrationResponse.deviceToken != null) setDevice(new Device(getConfigrationResponse.deviceToken))
     }
 
     void fetchDeviceFromConfiguration().then(r => {})

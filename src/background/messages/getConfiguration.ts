@@ -8,8 +8,8 @@ export interface GetConfigurationMessageResponsePayload {
 
 class GetConfigurationMessage extends Message {
   protected async process (request: PlasmoMessaging.Request): Promise<GetConfigurationMessageResponsePayload> {
-    const deviceToken = await this.configurationManager.deviceToken()
-    const sessionToken = await this.configurationManager.sessionToken()
+    const deviceToken = await this.authenticationManager.deviceToken()
+    const sessionToken = await this.authenticationManager.sessionToken()
     return { deviceToken, sessionToken }
   }
 }

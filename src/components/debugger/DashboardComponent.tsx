@@ -1,8 +1,6 @@
 import React from 'react'
 import PairDebuggerComponent from './PairDebuggerComponent'
-import ConnectDebuggerComponent from './ConnectDebuggerComponent'
 import UnpairDebuggerComponent from './UnpairDebuggerComponent'
-import DisconnectDebuggerComponent from './DisconnectDebuggerComponent'
 import UploadDebuggerComponent from './UploadDebuggerComponent'
 
 export default function DashboardComponent (): React.ReactElement {
@@ -15,8 +13,6 @@ export default function DashboardComponent (): React.ReactElement {
 
         <PairDebuggerComponent/>
         <UnpairDebuggerComponent/>
-        <ConnectDebuggerComponent/>
-        <DisconnectDebuggerComponent/>
         <UploadDebuggerComponent/>
       </div>
     </div>

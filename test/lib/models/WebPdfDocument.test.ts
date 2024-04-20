@@ -2,7 +2,7 @@ import {
   InvalidPdfWebDocumentUrlError,
   WebPdfDocument,
   WebPdfDocumentDownloadError
-} from '../../../src/lib/fileTransfer/WebPdfDocument'
+} from '../../../src/lib/models/WebPdfDocument'
 
 describe('WebPdfDocument', () => {
   describe('#valid', () => {

@@ -12,7 +12,7 @@ function DocumentUploader (): React.ReactElement {
     if (canUpload()) {
       setUploading(true)
       try {
-        const documentReference = await sendToBackground({ name: 'upload', body: { name: webDocumentName, webDocumentUrl } })
+        await sendToBackground({ name: 'upload', body: { name: webDocumentName, webDocumentUrl } })
         setWebDocumentName('')
         setWebDocumentUrl('')
       } finally {

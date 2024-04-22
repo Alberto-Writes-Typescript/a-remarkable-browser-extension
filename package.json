@@ -20,6 +20,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.12",
     "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.9.3",
     "a-remarkable-js-sdk": "^0.4.3",

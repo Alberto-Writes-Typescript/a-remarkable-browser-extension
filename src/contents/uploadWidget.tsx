@@ -1,7 +1,8 @@
 import React from 'react'
-import { type PlasmoGetOverlayAnchorList } from 'plasmo'
-import styleText from 'data-text:../../assets/css/style.css'
+import {PlasmoCSUIProps, type PlasmoGetOverlayAnchorList} from 'plasmo'
+import UploadButton from '../components/contents/uploadButton'
 
+import styleText from 'data-text:../../assets/css/style.css'
 import '../../assets/css/style.css'
 
 /**
@@ -24,8 +25,8 @@ export const getInlineAnchorList: PlasmoGetOverlayAnchorList =
 /**
  * Component Definition
  */
-const CustomButton = (): React.ReactElement => {
-  return <button className="mt-4">Custom button</button>
+const UploadWidget = ({ anchor }: PlasmoCSUIProps): React.ReactElement => {
+  return <UploadButton anchor={anchor}/>
 }
 
-export default CustomButton
+export default UploadWidget

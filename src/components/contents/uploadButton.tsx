@@ -13,6 +13,7 @@ import {
 } from '@floating-ui/react'
 import React, { useState } from 'react'
 import IconButton from '../common/iconButton'
+import UploadOverview from './uploadOverview'
 
 export interface UploadButtonProps {
   anchor: HTMLAnchorElement
@@ -48,11 +49,7 @@ export default function UploadButton ({ anchor }: UploadButtonProps): React.Reac
     {isOpen && (
       <FloatingFocusManager context={context} modal={false}>
         <div ref={refs.setFloating} aria-labelledby={headingId} {...getFloatingProps()}>
-          <h2 id={headingId}>Cacahue</h2>
-
-          <button>
-            Add
-          </button>
+          <UploadOverview/>
         </div>
       </FloatingFocusManager>
     )}

@@ -26,7 +26,7 @@ const INPUT_VARIANTS = {
   `
 }
 
-export default function Button ({ size, variant, ...rest }: InputProps): React.ReactElement {
+export default function Input ({ size, variant, ...rest }: InputProps): React.ReactElement {
   const className = `
     transition-all bg-transparent
     focus:outline-none focus:ring-0

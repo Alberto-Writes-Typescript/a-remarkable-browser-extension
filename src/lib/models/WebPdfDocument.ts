@@ -9,6 +9,11 @@ export class WebPdfDocument {
     return documentUrl.endsWith('.pdf')
   }
 
+  static async fromUrl (documentUrl: string): Promise<WebPdfDocument> {
+    const name = documentUrl.split('/').pop() ?? 'document.pdf'
+    return await WebPdfDocument.initialize(documentUrl, name)
+  }
+
   static async initialize (documentUrl: string, name: string): Promise<WebPdfDocument> {
     if (!WebPdfDocument.valid(documentUrl)) {
       throw new InvalidPdfWebDocumentUrlError(`Attempt to initialize a WebPdfDocument with an URL whose extension is not PDF: ${documentUrl}`)

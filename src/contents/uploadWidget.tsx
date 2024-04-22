@@ -1,5 +1,5 @@
 import React from 'react'
-import {PlasmoCSUIProps, type PlasmoGetOverlayAnchorList} from 'plasmo'
+import { type PlasmoCSUIProps, type PlasmoGetOverlayAnchorList } from 'plasmo'
 import UploadButton from '../components/contents/uploadButton'
 
 import styleText from 'data-text:../../assets/css/style.css'
@@ -26,7 +26,8 @@ export const getInlineAnchorList: PlasmoGetOverlayAnchorList =
  * Component Definition
  */
 const UploadWidget = ({ anchor }: PlasmoCSUIProps): React.ReactElement => {
-  return <UploadButton anchor={anchor}/>
+  // @ts-expect-error - Expected error
+  return <UploadButton url={anchor?.element?.href}/>
 }
 
 export default UploadWidget

@@ -11,21 +11,32 @@ import {
   FloatingFocusManager,
   useId
 } from '@floating-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import IconButton from '../common/iconButton'
 import UploadOverview from './uploadOverview'
+import { WebPdfDocument } from '../../lib/models/WebPdfDocument'
 
 export interface UploadButtonProps {
-  anchor: HTMLAnchorElement
+  url: string
 }
 
-export default function UploadButton ({ anchor }: UploadButtonProps): React.ReactElement {
+export default function UploadButton ({ url }: UploadButtonProps): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false)
+  const [webDocument, setWebDocument] = useState<WebPdfDocument | null>(null)
+
+  useEffect(() => {
+    const fetchWebDocument = async (): Promise<void> => {
+      const urlWebDocument = await WebPdfDocument.fromUrl(url)
+      setWebDocument(urlWebDocument)
+    }
+
+    void fetchWebDocument().then(r => {})
+  }, [])
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
-    placement: 'right-end',
+    placement: 'top-end',
     middleware: [
       offset(10),
       flip({ fallbackAxisSideDirection: 'end' }),
@@ -44,14 +55,20 @@ export default function UploadButton ({ anchor }: UploadButtonProps): React.Reac
   const headingId = useId()
 
   return <div>
-    <IconButton size="small" ref={refs.setReference} {...getReferenceProps()}/>
+    {
+      webDocument != null
+        ? <>
+            <IconButton size="small" ref={refs.setReference} {...getReferenceProps()}/>
 
-    {isOpen && (
-      <FloatingFocusManager context={context} modal={false}>
-        <div ref={refs.setFloating} aria-labelledby={headingId} {...getFloatingProps()}>
-          <UploadOverview/>
-        </div>
-      </FloatingFocusManager>
-    )}
+            {isOpen && (
+              <FloatingFocusManager context={context} modal={false}>
+                <div ref={refs.setFloating} aria-labelledby={headingId} {...getFloatingProps()}>
+                  <UploadOverview webDocument={webDocument}/>
+                </div>
+              </FloatingFocusManager>
+            )}
+          </>
+        : null
+    }
   </div>
 }

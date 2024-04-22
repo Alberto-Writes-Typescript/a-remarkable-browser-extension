@@ -5,4 +5,8 @@ export default {
   component: uploadOverview
 }
 
-export const Default = {}
+export const Default = {
+  args: {
+    webDocument: undefined
+  }
+}

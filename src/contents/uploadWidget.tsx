@@ -2,6 +2,15 @@ import React from 'react'
 import type { PlasmoCSUIProps, PlasmoGetOverlayAnchor } from 'plasmo'
 import UploadButton from '../components/contents/uploadButton'
 
+import styleText from 'data-text:../../assets/css/style.css'
+import type * as style from '../../assets/css/style.css'
+
+export const getStyle = (): style => {
+  const style = document.createElement('style')
+  style.textContent = styleText
+  return style
+}
+
 // @ts-expect-error - Expected error
 export const getOverlayAnchor: PlasmoGetOverlayAnchor = async () => {
   return document.querySelector('#file-name-id')

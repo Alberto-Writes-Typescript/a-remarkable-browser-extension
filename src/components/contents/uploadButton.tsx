@@ -11,29 +11,18 @@ import {
   FloatingFocusManager,
   useId
 } from '@floating-ui/react'
-import React, { useEffect, useState } from 'react'
-import DocumentPreview from '../../lib/models/DocumentPreview'
+import React, { useState } from 'react'
+import type DocumentPreview from '../../lib/models/DocumentPreview'
 import IconButton from '../common/iconButton'
 import UploadPreview from './uploadPreview'
 
 export interface UploadButtonProps {
-  url: string
+  documentPreview?: DocumentPreview
+  fileName?: string
 }
 
-export default function UploadButton ({ url }: UploadButtonProps): React.ReactElement {
+export default function UploadButton ({ documentPreview, fileName }: UploadButtonProps): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false)
-  const [documentPreview, setDocumentPreview] = useState<DocumentPreview | null>(null)
-
-  useEffect(() => {
-    const fetchDocumentPreview = async (): Promise<void> => {
-      try {
-        const documentPreview = await DocumentPreview.from(url)
-        setDocumentPreview(documentPreview)
-      } catch (error) {}
-    }
-
-    void fetchDocumentPreview().then(r => {})
-  }, [])
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
@@ -65,7 +54,7 @@ export default function UploadButton ({ url }: UploadButtonProps): React.ReactEl
           {isOpen && (
             <FloatingFocusManager context={context} modal={false}>
               <div ref={refs.setFloating} aria-labelledby={headingId} {...getFloatingProps()}>
-                <UploadPreview documentPreview={documentPreview}/>
+                <UploadPreview fileName={ fileName } documentPreview={documentPreview}/>
               </div>
             </FloatingFocusManager>
           )}

@@ -6,11 +6,11 @@ import Heading from '../common/heading'
 
 export interface UploadOverviewProps {
   documentPreview?: DocumentPreview
-  name?: string
+  fileName?: string
 }
 
-export default function UploadOverview ({ documentPreview, name }: UploadOverviewProps): React.ReactElement {
-  const uploadFileName = name ?? documentPreview?.name ?? '-'
+export default function UploadOverview ({ documentPreview, fileName }: UploadOverviewProps): React.ReactElement {
+  const uploadFileName = fileName ?? documentPreview?.name ?? '-'
   const uploadFileSize = (documentPreview != null) ? filesize(documentPreview.size) : '-'
 
   return (

@@ -1,3 +1,4 @@
+import DocumentPreview from '../../lib/models/DocumentPreview'
 import uploadButton from './uploadButton'
 
 export default {
@@ -7,6 +8,7 @@ export default {
 
 export const Default = {
   args: {
-    url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+    documentPreview: new DocumentPreview('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 100),
+    fileName: 'my dummy PDF'
   }
 }

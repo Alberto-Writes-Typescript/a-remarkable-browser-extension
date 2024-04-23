@@ -27,3 +27,8 @@ export class InvalidDeviceTokenError extends Error {}
  * an actual JWT session token.
  */
 export class InvalidSessionTokenError extends Error {}
+
+/**
+ * Triggered when an HTTP request fails.
+ */
+export class UnsuccessfulRequestError extends Error {}

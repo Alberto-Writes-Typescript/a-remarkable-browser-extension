@@ -17,7 +17,8 @@ import UploadOverview from './uploadOverview'
 import { WebPdfDocument } from '../../lib/models/WebPdfDocument'
 
 export interface UploadButtonProps {
-  url: string
+  url: string,
+
 }
 
 export default function UploadButton ({ url }: UploadButtonProps): React.ReactElement {
@@ -26,8 +27,10 @@ export default function UploadButton ({ url }: UploadButtonProps): React.ReactEl
 
   useEffect(() => {
     const fetchWebDocument = async (): Promise<void> => {
-      const urlWebDocument = await WebPdfDocument.fromUrl(url)
-      setWebDocument(urlWebDocument)
+      try {
+        const urlWebDocument = await WebPdfDocument.fromUrl(url)
+        setWebDocument(urlWebDocument)
+      } catch (error) {}
     }
 
     void fetchWebDocument().then(r => {})
@@ -68,7 +71,7 @@ export default function UploadButton ({ url }: UploadButtonProps): React.ReactEl
               </FloatingFocusManager>
             )}
           </>
-        : null
+        : <IconButton size="small"/>
     }
   </div>
 }

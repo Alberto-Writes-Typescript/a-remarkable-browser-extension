@@ -7,14 +7,15 @@ export interface GetDocumentPreviewMessageRequestPayload {
 }
 
 export interface GetDocumentPreviewMessageResponsePayload {
-  documentPreview: DocumentPreview
+  url: string
+  size: number
 }
 
 class GetDocumentPreviewMessage extends Message {
   protected async process (request: PlasmoMessaging.Request): Promise<GetDocumentPreviewMessageResponsePayload> {
     const payload = request.body as GetDocumentPreviewMessageRequestPayload
     const documentPreview = await DocumentPreview.from(payload.url)
-    return { documentPreview }
+    return { url: documentPreview.url, size: documentPreview.size }
   }
 }
 

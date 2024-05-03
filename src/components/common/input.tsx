@@ -2,7 +2,7 @@ import React from 'react'
 
 export interface InputProps {
   size?: 'small' | 'medium' | 'large'
-  variant?: 'primary' | 'oneTimeCode'
+  variant?: 'primary' | 'oneTimeCode' | 'transparent'
   [x: string]: unknown
 }
 
@@ -23,6 +23,10 @@ const INPUT_VARIANTS = {
     focus:border-gray-700 focus:bg-gray-100
     hover:border-gray-700 hover:bg-gray-100
     disabled:text-gray-400 disabled:bg-gray-100 disabled:border-gray-400
+  `,
+  transparent: `
+    !p-0 text-gray-600
+    disabled:text-gray-400
   `
 }
 

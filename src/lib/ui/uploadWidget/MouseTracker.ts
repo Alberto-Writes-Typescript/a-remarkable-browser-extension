@@ -17,17 +17,16 @@ export default class MouseTracker {
     this.#viewport = viewport
 
     this.#attachAnchorCallback = ({ target }) => {
-      if (this.#isAnchorCandidate(target as HTMLElement)) {
-        this.#markAsAnchor(target as HTMLElement)
-      }
+      this.#setAnchor(target as HTMLElement)
     }
 
     this.#detachAnchorCallback = ({ relatedTarget }) => {
       if (
-        !this.#isAnchorCandidate(relatedTarget as HTMLElement) &&
+        this.#currentAnchor != null &&
+        !this.#currentAnchor.contains(relatedTarget as HTMLElement) &&
         !this.#inUploadWidgetWrapper(relatedTarget as HTMLElement)
       ) {
-        this.#removeCurrentAnchor()
+        this.#unsetAnchor()
       }
     }
 
@@ -39,14 +38,18 @@ export default class MouseTracker {
     return this.#currentAnchor
   }
 
-  #markAsAnchor (element: HTMLElement): void {
-    this.#removeCurrentAnchor()
+  #setAnchor (element: HTMLElement): void {
+    const newAnchor = this.#anchor(element)
 
-    this.#currentAnchor = element
-    this.#currentAnchor.id = UPLOAD_WIDGET_ANCHOR_ID
+    if (newAnchor != null) {
+      this.#unsetAnchor()
+
+      this.#currentAnchor = newAnchor
+      this.#currentAnchor.id = UPLOAD_WIDGET_ANCHOR_ID
+    }
   }
 
-  #removeCurrentAnchor (): void {
+  #unsetAnchor (): void {
     this.#currentAnchor?.removeAttribute('id')
     this.#currentAnchor = null
   }
@@ -55,10 +58,12 @@ export default class MouseTracker {
     return new UploadWidgetMatcher(element).match != null
   }
 
-  #isAnchorCandidate (element: HTMLElement): boolean {
-    return this.#matchers.some(Matcher => {
-      const instance = new Matcher(element)
-      return instance.match != null
-    })
+  #anchor (element: HTMLElement): HTMLElement | null | undefined {
+    return this.#matchers
+      .map(Matcher => {
+        const instance = new Matcher(element)
+        return instance.match
+      })
+      .find(match => { return match != null })
   }
 }

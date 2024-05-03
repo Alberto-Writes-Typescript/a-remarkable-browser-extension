@@ -4,7 +4,7 @@
 
 import { fireEvent } from '@testing-library/dom'
 import MouseTracker from '../../../../src/lib/ui/uploadWidget/MouseTracker'
-import { PLASMO_OVERLAY_ID } from '../../../../src/lib/ui/uploadWidget/UploadWidgetMatcher'
+import UploadWidgetMatcher from '../../../../src/lib/ui/uploadWidget/UploadWidgetMatcher'
 
 describe('MouseTracker', () => {
   let element: HTMLElement
@@ -42,8 +42,7 @@ describe('MouseTracker', () => {
   })
 
   it('if mouse leaves anchor element and enters to the upload widget simultaneously, anchor remains', () => {
-    const uploadWidgetWrapper = document.createElement('div')
-    uploadWidgetWrapper.setAttribute('id', PLASMO_OVERLAY_ID)
+    const uploadWidgetWrapper = document.createElement(UploadWidgetMatcher.matchingTagName)
     viewport.appendChild(uploadWidgetWrapper)
 
     const uploadWidgetHoverableElement = document.createElement('div')

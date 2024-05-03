@@ -1,4 +1,4 @@
-export const PLASMO_OVERLAY_ID = 'plasmo-shadow-container'
+const PLASMO_OVERLAY_TAG = 'plasmo-csui'
 
 /**
  * Special Matcher, used to detect items within the upload widget UI.
@@ -8,7 +8,7 @@ export const PLASMO_OVERLAY_ID = 'plasmo-shadow-container'
  * to not hide the widget when the user interacts with it.
  */
 export default class UploadWidgetMatcher {
-  static matchingId = PLASMO_OVERLAY_ID
+  static matchingTagName = PLASMO_OVERLAY_TAG
 
   element: HTMLElement
 
@@ -17,6 +17,6 @@ export default class UploadWidgetMatcher {
   }
 
   get match (): HTMLElement | null {
-    return this.element.closest(`#${UploadWidgetMatcher.matchingId}`)
+    return this.element.closest(UploadWidgetMatcher.matchingTagName)
   }
 }

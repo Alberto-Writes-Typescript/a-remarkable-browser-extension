@@ -2,8 +2,7 @@
  * @jest-environment jsdom
  */
 
-import UploadWidgetMatcher, { PLASMO_OVERLAY_ID }
-  from '../../../../src/lib/ui/uploadWidget/UploadWidgetMatcher'
+import UploadWidgetMatcher from '../../../../src/lib/ui/uploadWidget/UploadWidgetMatcher'
 
 describe('PdfDocumentMatcher', () => {
   describe('.match', () => {
@@ -12,8 +11,7 @@ describe('PdfDocumentMatcher', () => {
       returns the element
     `,
     () => {
-      const element = document.createElement('div')
-      element.setAttribute('id', PLASMO_OVERLAY_ID)
+      const element = document.createElement(UploadWidgetMatcher.matchingTagName)
 
       const matcher = new UploadWidgetMatcher(element)
 
@@ -25,8 +23,8 @@ describe('PdfDocumentMatcher', () => {
       returns the element
     `,
     () => {
-      const element = document.createElement('div')
-      element.setAttribute('id', PLASMO_OVERLAY_ID)
+      const element = document.createElement(UploadWidgetMatcher.matchingTagName)
+
       const childElement = document.createElement('div')
       element.appendChild(childElement)
 

@@ -1,6 +1,6 @@
 import { sendToBackground } from '@plasmohq/messaging'
 import type { PlasmoGetOverlayAnchor } from 'plasmo'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import DocumentPreview from '../lib/models/DocumentPreview'
 import type { GetDocumentPreviewMessageResponsePayload } from '../background/messages/getDocumentPreview'
@@ -22,6 +22,8 @@ export const getOverlayAnchor: PlasmoGetOverlayAnchor = async () => {
 
 export default function UploadWidget ({ anchor: { element } }): React.ReactElement {
   const [documentPreview, setDocumentPreview] = useState<DocumentPreview | undefined>(undefined)
+  const widgetWrapperRef = useRef<HTMLDivElement>(null)
+  const widgetButtonRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     async function fetchDocumentPreview (): Promise<void> {
@@ -42,9 +44,22 @@ export default function UploadWidget ({ anchor: { element } }): React.ReactEleme
     void fetchDocumentPreview().then(r => {})
   }, [])
 
+  useEffect(() => {
+    const widgetWrapper = widgetWrapperRef.current as HTMLDivElement
+    const widgetButton = widgetButtonRef.current as HTMLDivElement
+
+    // Updates widget wrapper to match the anchor element's position
+    widgetWrapper.style.width = `${element.offsetWidth}px`
+
+    // Update button wrapper to position it around the widget wrapper
+    widgetButton.style.marginLeft = `${element.offsetWidth + 15}px`
+  })
+
   return (
-    <div>
-      <UploadButton documentPreview={documentPreview}/>
+    <div ref={widgetWrapperRef} className={ `relative pointer-events-none animate-all ${documentPreview != null ? 'opacity-1' : 'hidden'}` }>
+      <div ref={widgetButtonRef} className="pointer-events-auto">
+        <UploadButton documentPreview={documentPreview}/>
+      </div>
     </div>
   )
 }

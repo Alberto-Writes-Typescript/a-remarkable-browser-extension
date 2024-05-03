@@ -25,13 +25,13 @@ export interface IconProps {
 
 export const ICON_SIZES = {
   xs: 'w-4 h-4',
-  sm: 'w-6 h-6',
+  sm: 'w-5 h-5',
   base: 'w-8 h-8',
   lg: 'w-12 h-12'
 }
 
-export default function Icon ({ icon, size, className }: IconProps): React.ReactElement {
-  const iconClasses = `${ICON_SIZES[size ?? 'medium']}} ${className as string | null}`
+export default function Icon ({ icon, size, ...rest }: IconProps): React.ReactElement {
+  const iconClasses = `${ICON_SIZES[size ?? 'medium']} ${rest.className as string | null}`
 
   return <div className={iconClasses} dangerouslySetInnerHTML={{ __html: ICONS_LIBRARY[icon] }} />
 }

@@ -1,15 +1,7 @@
 import {
   useFloating,
-  autoUpdate,
-  offset,
-  flip,
-  shift,
-  useDismiss,
-  useRole,
-  useClick,
   useInteractions,
-  FloatingFocusManager,
-  useId
+  useId, useHover, safePolygon, offset, flip, shift, autoUpdate
 } from '@floating-ui/react'
 import React, { useState } from 'react'
 import type DocumentPreview from '../../lib/models/DocumentPreview'
@@ -36,27 +28,23 @@ export default function UploadButton ({ documentPreview, fileName }: UploadButto
     whileElementsMounted: autoUpdate
   })
 
-  const click = useClick(context)
-  const dismiss = useDismiss(context)
-  const role = useRole(context)
-
-  const { getReferenceProps, getFloatingProps } =
-    useInteractions([click, dismiss, role])
+  const hover = useHover(context, { handleClose: safePolygon() })
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover])
 
   const headingId = useId()
 
-  return <div>
+  return <div className="w-fit">
     {
       documentPreview != null
         ? <>
-          <IconButton size="small" ref={refs.setReference} {...getReferenceProps()}/>
+          <div ref={refs.setReference} {...getReferenceProps()}>
+            <IconButton size="small" />
+          </div>
 
           {isOpen && (
-            <FloatingFocusManager context={context} modal={false}>
-              <div ref={refs.setFloating} aria-labelledby={headingId} {...getFloatingProps()}>
-                <UploadPreview fileName={ fileName } documentPreview={documentPreview}/>
-              </div>
-            </FloatingFocusManager>
+            <div ref={refs.setFloating} style={floatingStyles} aria-labelledby={headingId} {...getFloatingProps()}>
+              <UploadPreview fileName={ fileName } documentPreview={documentPreview}/>
+            </div>
           )}
         </>
         : <IconButton size="small"/>

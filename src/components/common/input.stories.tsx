@@ -52,3 +52,9 @@ OneTimeCode.args = { variant: 'oneTimeCode' }
 OneTimeCode.argTypes = {
   variant: { table: { disable: true } }
 }
+
+export const Transparent = Template.bind({})
+Transparent.args = { variant: 'transparent' }
+Transparent.argTypes = {
+  variant: { table: { disable: true } }
+}

@@ -11,9 +11,10 @@ import UploadPreview from './uploadPreview'
 export interface UploadButtonProps {
   documentPreview?: DocumentPreview
   fileName?: string
+  setFileName: (fileName: string) => void
 }
 
-export default function UploadButton ({ documentPreview, fileName }: UploadButtonProps): React.ReactElement {
+export default function UploadButton ({ documentPreview, fileName, setFileName }: UploadButtonProps): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false)
 
   const { refs, floatingStyles, context } = useFloating({
@@ -43,7 +44,7 @@ export default function UploadButton ({ documentPreview, fileName }: UploadButto
 
           {isOpen && (
             <div ref={refs.setFloating} style={floatingStyles} aria-labelledby={headingId} {...getFloatingProps()}>
-              <UploadPreview fileName={ fileName } documentPreview={documentPreview}/>
+              <UploadPreview fileName={fileName} setFileName={setFileName} documentPreview={documentPreview}/>
             </div>
           )}
         </>

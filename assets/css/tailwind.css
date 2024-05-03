@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Forces all Content Script UI containers to not register any pointer events */
+.plasmo-csui-container {
+    pointer-events: none;
+}

@@ -52,12 +52,12 @@ export default function UploadWidget ({ anchor: { element } }): React.ReactEleme
     widgetWrapper.style.width = `${element.offsetWidth}px`
 
     // Update button wrapper to position it around the widget wrapper
-    widgetButton.style.marginLeft = `${element.offsetWidth + 15}px`
+    widgetButton.style.marginLeft = `${element.offsetWidth}px`
   })
 
   return (
     <div ref={widgetWrapperRef} className={ `relative pointer-events-none animate-all ${documentPreview != null ? 'opacity-1' : 'hidden'}` }>
-      <div ref={widgetButtonRef} className="pointer-events-auto">
+      <div ref={widgetButtonRef} className="pl-3 pointer-events-auto">
         <UploadButton documentPreview={documentPreview}/>
       </div>
     </div>

@@ -1,5 +1,6 @@
-import IconButton, { ICON_BUTTON_SIZES, ICON_BUTTON_STYLES, type IconButtonProps } from './iconButton'
 import { type StoryFn } from '@storybook/react'
+
+import IconButton, { ICON_BUTTON_SIZES, ICON_BUTTON_STYLES, type IconButtonProps } from './iconButton'
 
 export default {
   title: 'Common/IconButton',

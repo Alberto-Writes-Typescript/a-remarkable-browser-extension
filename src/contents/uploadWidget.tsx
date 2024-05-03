@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 
 import DocumentPreview from '../lib/models/DocumentPreview'
 import type { GetDocumentPreviewMessageResponsePayload } from '../background/messages/getDocumentPreview'
+import { UPLOAD_WIDGET_ANCHOR_ID } from '../lib/ui/uploadWidget/MouseTracker'
 import UploadButton from '../components/contents/uploadButton'
 
 import styleText from 'data-text:../../assets/css/style.css'
@@ -16,7 +17,7 @@ export const getStyle = (): HTMLElement => {
 
 // @ts-expect-error - Expected Error
 export const getOverlayAnchor: PlasmoGetOverlayAnchor = async () => {
-  return document.querySelector('#cacahue')
+  return document.querySelector(`#${UPLOAD_WIDGET_ANCHOR_ID}`)
 }
 
 export default function UploadWidget ({ anchor: { element } }): React.ReactElement {

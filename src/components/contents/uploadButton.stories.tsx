@@ -9,6 +9,8 @@ export default {
 export const Default = {
   args: {
     documentPreview: new DocumentPreview('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 100),
-    fileName: 'my dummy PDF'
+    uploadDocument: async (fileName: string, url: string) => {
+      console.log('Uploading document:', fileName, 'from:', url)
+    }
   }
 }

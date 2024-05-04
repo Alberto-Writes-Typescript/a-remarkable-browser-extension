@@ -130,7 +130,7 @@ export const ICONS_LIBRARY = {
 }
 
 export interface IconProps {
-  icon: 'upload'
+  icon: 'upload' | 'logoAcronym' | 'logo'
   size?: 'xs' | 'sm' | 'base' | 'lg'
   [x: string]: unknown
 }

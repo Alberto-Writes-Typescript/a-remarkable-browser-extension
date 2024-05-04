@@ -3,14 +3,14 @@ import React from 'react'
 import Icon, { type IconProps } from './icon'
 
 export interface IconButtonProps {
-  icon: 'upload'
+  icon: 'upload' | 'logoAcronym' | 'logo'
   as?: 'button' | 'a' | 'div'
-  theme?: 'primary'
+  variant?: 'primary'
   size?: 'sm' | 'base'
   [x: string]: unknown
 }
 
-export const ICON_BUTTON_STYLES = {
+export const ICON_BUTTON_VARIANTS = {
   primary: `
     group/button
     border border-gray-700 text-gray-700  font-semibold
@@ -37,19 +37,20 @@ export const ICON_BUTTON_ICON_SIZES = {
   base: 'sm'
 }
 
-export default function Button ({ icon, as, theme, size, ...rest }: IconButtonProps): React.ReactElement {
+export default function Button ({ icon, as, variant, size, ...rest }: IconButtonProps): React.ReactElement {
   const Component = as ?? 'button'
 
   const className = `
     flex items-center justify-center
     transition-all cursor-pointer disabled:cursor-not-allowed
-    ${ICON_BUTTON_STYLES[theme ?? 'primary']}
+    ${ICON_BUTTON_VARIANTS[variant ?? 'primary']}
     ${ICON_BUTTON_SIZES[size ?? 'medium']}
+    ${rest.className}
   `
 
   const iconProps = {
     icon,
-    className: ICON_BUTTON_ICON_STYLES[theme ?? 'primary'],
+    className: ICON_BUTTON_ICON_STYLES[variant ?? 'primary'],
     size: ICON_BUTTON_ICON_SIZES[size ?? 'base'] as 'xs' | 'sm' | 'base' | 'lg'
   } satisfies IconProps
 

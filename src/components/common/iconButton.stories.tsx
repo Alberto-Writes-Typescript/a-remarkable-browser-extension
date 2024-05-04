@@ -1,6 +1,6 @@
 import { type StoryFn } from '@storybook/react'
 
-import IconButton, { ICON_BUTTON_SIZES, ICON_BUTTON_STYLES, type IconButtonProps } from './iconButton'
+import IconButton, { ICON_BUTTON_SIZES, ICON_BUTTON_VARIANTS, type IconButtonProps } from './iconButton'
 import { ICONS_LIBRARY } from './icon'
 
 export default {
@@ -15,9 +15,9 @@ export default {
       control: 'select',
       options: ['button', 'a', 'div']
     },
-    theme: {
+    variant: {
       control: 'select',
-      options: Object.keys(ICON_BUTTON_STYLES)
+      options: Object.keys(ICON_BUTTON_VARIANTS)
     },
     size: {
       control: 'select',
@@ -37,4 +37,4 @@ export const Medium = Template.bind({})
 Medium.args = { size: 'base', icon: 'upload' }
 
 export const Primary = Template.bind({})
-Primary.args = { theme: 'primary', icon: 'upload' }
+Primary.args = { variant: 'primary', icon: 'upload', size: 'base' }

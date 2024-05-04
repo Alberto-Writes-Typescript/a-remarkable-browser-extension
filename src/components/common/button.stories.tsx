@@ -1,4 +1,4 @@
-import button from './button'
+import button, { BUTTON_SIZES, BUTTON_VARIANTS } from './button'
 
 export default {
   title: 'Common/Button',
@@ -8,13 +8,13 @@ export default {
       control: 'select',
       options: ['button', 'a', 'div']
     },
-    theme: {
+    variant: {
       control: 'select',
-      options: ['primary']
+      options: Object.keys(BUTTON_VARIANTS)
     },
     size: {
       control: 'select',
-      options: ['medium']
+      options: Object.keys(BUTTON_SIZES)
     }
   }
 }
@@ -22,8 +22,8 @@ export default {
 export const Default = {
   args: {
     as: 'button',
-    theme: 'primary',
-    size: 'medium',
+    variant: 'primary',
+    size: 'base',
     children: 'Button'
   }
 }

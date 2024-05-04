@@ -98,7 +98,7 @@ export const ICONS_LIBRARY = {
     </svg>
   `,
   logoAcronym: `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080.000000 1080.000000"preserveAspectRatio="xMidYMid meet">
+    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080.000000 1080.000000" preserveAspectRatio="xMidYMid meet">
       <g transform="translate(0.000000,1080.000000) scale(0.100000,-0.100000)" stroke="none">
         <path d="M4947 7949 c-302 -17 -598 -80 -850 -180 -593 -236 -867 -599 -867
         -1150 0 -319 107 -593 313 -799 165 -165 377 -250 625 -250 192 0 323 41 493

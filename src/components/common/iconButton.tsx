@@ -48,6 +48,8 @@ export default function Button ({ icon, as, variant, size, ...rest }: IconButton
     ${rest.className}
   `
 
+  delete rest.className
+
   const iconProps = {
     icon,
     className: ICON_BUTTON_ICON_STYLES[variant ?? 'primary'],

@@ -21,6 +21,7 @@ export const BUTTON_SIZES = {
 
 export default function Button ({ as, variant, size, children, ...rest }: ButtonProps): React.ReactElement {
   const Component = as ?? 'button'
+
   const className = `
     transition-all cursor-pointer disabled:cursor-not-allowed
     ${BUTTON_VARIANTS[variant ?? 'primary']}
@@ -28,11 +29,10 @@ export default function Button ({ as, variant, size, children, ...rest }: Button
     ${rest.className}
   `
 
+  delete rest.className
+
   return (
-    <Component
-      className = {className}
-      {...rest}
-    >
+    <Component className = {className} {...rest}>
       {children}
     </Component>
   )

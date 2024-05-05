@@ -23,6 +23,7 @@ export default function Button ({ as, variant, size, children, ...rest }: Button
   const Component = as ?? 'button'
 
   const className = `
+    flex items-center justify-center
     transition-all cursor-pointer disabled:cursor-not-allowed
     ${BUTTON_VARIANTS[variant ?? 'primary']}
     ${BUTTON_SIZES[size ?? 'medium']}

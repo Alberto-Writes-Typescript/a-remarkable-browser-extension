@@ -78,9 +78,9 @@ export default function UploadButton ({ documentPreview, uploadDocument }: Uploa
 
   return (
     <div className='w-fit'>
-      <div className='group/upload-button w-fit inline-flex' ref={refs.setReference} {...getReferenceProps()}>
+      <div className='group/upload-button w-[325px] pointer-events-none w-fit inline-flex' ref={refs.setReference} {...getReferenceProps()}>
         <IconButton
-          className='border-r-0'
+          className='border-r-0 pointer-events-auto'
           icon={ BUTTON_ICON[uploadStatus] }
           onClick={async (): Promise<void> => { await startUpload() }}
           size='sm'
@@ -88,7 +88,7 @@ export default function UploadButton ({ documentPreview, uploadDocument }: Uploa
         <Button
           className={
             `
-              border-l-0 inline-flex items-center justify-center gap-2 text-nowrap
+              border-l-0 inline-flex items-center justify-center gap-2 text-nowrap pointer-events-auto
               animate-all ease-out duration-400 overflow-hidden !w-0 !px-0
               group-hover/upload-button:!w-[200px] group-hover/upload-button:!px-4
             `

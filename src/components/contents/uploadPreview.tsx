@@ -20,7 +20,7 @@ export default function UploadOverview ({ documentPreview, fileName, setFileName
 
   // TODO: horizontal description list & input component with labels
   return (
-    <div className="w-[300px] px-4 py-3 divide-y divide-dashed text-xs text-gray-400 border border-gray-700">
+    <div className="w-[300px] px-4 py-3 divide-y divide-dashed !bg-white text-xs text-gray-400 border border-gray-700">
       <div className='inline-flex gap-2 pb-4'>
         <Icon icon='document' size='xs'/>
         <div className='flex-1'>

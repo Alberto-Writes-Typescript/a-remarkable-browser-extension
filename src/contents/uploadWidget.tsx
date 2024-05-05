@@ -3,8 +3,8 @@ import type { PlasmoGetOverlayAnchor } from 'plasmo'
 import React, { useEffect, useRef, useState } from 'react'
 
 import DocumentPreview from '../lib/models/DocumentPreview'
+import { type GetDocumentPreviewMessageResponsePayload } from '../background/messages/getDocumentPreview'
 import UploadButton from '../components/contents/uploadButton'
-
 import styleText from 'data-text:../../assets/css/style.css'
 import { UPLOAD_WIDGET_ANCHOR_ID } from '../lib/ui/uploadWidget/AnchorTrackingManager'
 
@@ -21,7 +21,14 @@ export const getOverlayAnchor: PlasmoGetOverlayAnchor = async () => {
 
 export default function UploadWidget ({ anchor: { element } }): React.ReactElement {
   const [documentPreview, setDocumentPreview] = useState<DocumentPreview | undefined>(undefined)
-  const [fileName, setFileName] = useState<string | null>(null)
+
+  async function uploadDocument (fileName: string, url: string): Promise<void> {
+    await sendToBackground({
+      name: 'upload',
+      body: { name: fileName, webDocumentUrl: url },
+      extensionId: 'egdpalgnbmgehpebjmkklcfkggadmglp'
+    })
+  }
 
   const widgetWrapperRef = useRef<HTMLDivElement>(null)
   const widgetButtonRef = useRef<HTMLDivElement>(null)
@@ -59,9 +66,7 @@ export default function UploadWidget ({ anchor: { element } }): React.ReactEleme
   return (
     <div ref={widgetWrapperRef} className={ `relative pointer-events-none animate-all ${documentPreview != null ? 'opacity-1' : 'hidden'}` }>
       <div ref={widgetButtonRef} className="pl-3 pointer-events-auto">
-        <UploadButton
-          documentPreview={documentPreview}
-          setFileName={setFileName}/>
+        {documentPreview != null && <UploadButton documentPreview={documentPreview} uploadDocument={uploadDocument}/>}
       </div>
     </div>
   )

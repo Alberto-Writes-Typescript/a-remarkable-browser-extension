@@ -3,7 +3,7 @@ import React from 'react'
 import Icon, { type IconProps } from './icon'
 
 export interface IconButtonProps {
-  icon: 'upload' | 'logoAcronym' | 'logo'
+  icon: 'document' | 'documentUpload' | 'upload' | 'logoAcronym' | 'logo'
   as?: 'button' | 'a' | 'div'
   variant?: 'primary'
   size?: 'sm' | 'base'

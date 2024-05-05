@@ -26,7 +26,7 @@ export default function Button ({ as, variant, size, children, ...rest }: Button
     transition-all cursor-pointer disabled:cursor-not-allowed
     ${BUTTON_VARIANTS[variant ?? 'primary']}
     ${BUTTON_SIZES[size ?? 'medium']}
-    ${rest.className}
+    ${rest.className as string}
   `
 
   delete rest.className

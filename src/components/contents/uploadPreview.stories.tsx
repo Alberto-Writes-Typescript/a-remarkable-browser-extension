@@ -8,6 +8,8 @@ export default {
 
 export const Default = {
   args: {
-    documentPreview: new DocumentPreview('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/my dummy file.pdf', 100)
+    documentPreview: new DocumentPreview('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/my dummy file.pdf', 100),
+    fileName: 'my dummy file.pdf',
+    setFileName: (fileName: string) => { return fileName }
   }
 }

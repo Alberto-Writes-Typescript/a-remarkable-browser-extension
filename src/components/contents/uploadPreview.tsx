@@ -1,9 +1,7 @@
 import { filesize } from 'filesize'
 import React from 'react'
 import type DocumentPreview from '../../lib/models/DocumentPreview'
-import DescriptionList, { DescriptionListDescription, DescriptionListTerm } from '../common/descriptionList'
-import Heading from '../common/heading'
-import Input from '../common/input'
+import Icon from '../common/icon'
 
 export interface UploadOverviewProps {
   documentPreview?: DocumentPreview
@@ -16,25 +14,11 @@ export default function UploadOverview ({ documentPreview, fileName, setFileName
   const uploadFileSize = (documentPreview != null) ? filesize(documentPreview.size) : '-'
 
   return (
-    <div className="w-[320px] flex flex-col gap-4 px-6 py-4 bg-gray-50 border border-gray-200">
-      <Heading as="h3">upload information</Heading>
-      <DescriptionList>
-        <DescriptionListTerm>name</DescriptionListTerm>
-        <DescriptionListDescription>
-          <Input
-            size="small"
-            variant="primary"
-            value={uploadFileName}
-            placeholder="insert document name"
-            onChange={({ target: { value } }) => { setFileName(value) }}/>
-        </DescriptionListDescription>
-
-        <DescriptionListTerm>size</DescriptionListTerm>
-        <DescriptionListDescription>{uploadFileSize}</DescriptionListDescription>
-
-        <DescriptionListTerm>destination</DescriptionListTerm>
-        <DescriptionListDescription>root</DescriptionListDescription>
-      </DescriptionList>
+    <div className="w-[300px] px-4 py-3 inline-flex items-center justify-between text-gray-400 border border-gray-700">
+      <div>
+        <Icon icon='document' size='base'/>
+        <p>a</p>
+      </div>
     </div>
   )
 }

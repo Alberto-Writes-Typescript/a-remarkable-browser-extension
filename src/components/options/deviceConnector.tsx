@@ -45,7 +45,7 @@ function DeviceConnector ({ pair }: DeviceConnectorProps): React.ReactElement {
         and the extension
       </p>
 
-      <Button as="a" href="https://my.remarkable.com/device/remarkable" target="_blank">
+      <Button as="a" size="base" href="https://my.remarkable.com/device/remarkable" target="_blank">
         request one time code
       </Button>
 

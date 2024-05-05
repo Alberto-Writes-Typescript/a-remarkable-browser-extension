@@ -11,8 +11,8 @@ export interface PairMessageResponsePayload {
 
 class PairMessage extends Message {
   protected async process (request: PlasmoMessaging.Request): Promise<PairMessageResponsePayload> {
-    const payload = request.body as PairMessageRequestPayload
-    const deviceToken = await this.pairManager.pair(payload.oneTimeCode)
+    const { oneTimeCode } = request.body as PairMessageRequestPayload
+    const deviceToken = await this.pairManager.pair(oneTimeCode)
     return { deviceToken }
   }
 }

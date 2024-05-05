@@ -3,9 +3,8 @@ import RemarkableManager from './RemarkableManager'
 
 export default class PairManager extends RemarkableManager {
   async pair (oneTimeCode: string): Promise<string> {
-    const client = await this.remarkableClient()
+    const client = await this.remarkableUnpairedClient()
     await client.pair(uuidv4(), 'browser-chrome', oneTimeCode)
-    // TODO: device token should be returned after pairing, here the connection manager knows too much
     await this.authenticationManager.setNewDevice(client.device.token)
     return client.device.token
   }

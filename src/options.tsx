@@ -14,7 +14,7 @@ function Options (): React.ReactElement {
   const [device, setDevice] = useState<Device | null>(null)
 
   const pair = useCallback(async (oneTimeCode: string): Promise<Device | null> => {
-    const pairResponse: PairMessageResponsePayload = await sendToBackground({ name: 'pair' })
+    const pairResponse: PairMessageResponsePayload = await sendToBackground({ name: 'pair', body: { oneTimeCode } })
     const device = new Device(pairResponse.deviceToken)
     setDevice(device)
     return device

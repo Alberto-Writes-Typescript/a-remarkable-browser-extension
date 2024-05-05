@@ -1,18 +1,19 @@
 import React from 'react'
 
 export interface InputProps {
-  size?: 'small' | 'medium' | 'large'
+  size?: 'xs' | 'sm' | 'base' | 'lg'
   variant?: 'primary' | 'oneTimeCode' | 'transparent'
   [x: string]: unknown
 }
 
-const INPUT_SIZES = {
-  small: 'text-sm',
-  medium: 'py-2 text-sm',
-  large: 'py-3 text-base'
+export const INPUT_SIZES = {
+  xs: 'px-1 text-xs',
+  sm: 'py-1 px-2 text-sm',
+  base: 'py-2 px-2 text-sm',
+  lg: 'py-3 px-2 text-base'
 }
 
-const INPUT_VARIANTS = {
+export const INPUT_VARIANTS = {
   primary: `
     border-b border-gray-400 text-gray-600
     focus:border-gray-700
@@ -27,6 +28,8 @@ const INPUT_VARIANTS = {
   transparent: `
     !p-0 text-gray-600
     disabled:text-gray-400
+    hover:bg-gray-50
+    focus:bg-gray-50
   `
 }
 
@@ -34,9 +37,12 @@ export default function Button ({ size, variant, ...rest }: InputProps): React.R
   const className = `
     transition-all bg-transparent
     focus:outline-none focus:ring-0
-    ${INPUT_SIZES[size ?? 'medium']}
+    ${INPUT_SIZES[size ?? 'base']}
     ${INPUT_VARIANTS[variant ?? 'primary']}
+    ${rest.className as string}
   `
+
+  delete rest.className
 
   return (
     <input className={className} {...rest}/>

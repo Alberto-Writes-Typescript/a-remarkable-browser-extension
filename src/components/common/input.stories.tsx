@@ -1,4 +1,4 @@
-import Input, { type InputProps } from './input'
+import Input, { INPUT_SIZES, INPUT_VARIANTS, type InputProps} from './input'
 import { type Meta, type StoryFn } from '@storybook/react'
 
 export default {
@@ -7,11 +7,11 @@ export default {
   argTypes: {
     size: {
       control: 'radio',
-      options: ['small', 'medium', 'large']
+      options: Object.keys(INPUT_SIZES)
     },
     variant: {
       control: 'radio',
-      options: ['primary', 'oneTimeCode']
+      options: Object.keys(INPUT_VARIANTS)
     },
     placeholder: {
       control: 'text'
@@ -23,20 +23,26 @@ const Template: StoryFn<InputProps> = (args) => <Input {...args} />
 
 export const Playground = Template.bind({})
 
+export const ExtraSmall = Template.bind({})
+ExtraSmall.args = { size: 'xs' }
+ExtraSmall.argTypes = {
+  size: { table: { disable: true } }
+}
+
 export const Small = Template.bind({})
-Small.args = { size: 'small' }
+Small.args = { size: 'sm' }
 Small.argTypes = {
   size: { table: { disable: true } }
 }
 
 export const Medium = Template.bind({})
-Medium.args = { size: 'medium' }
+Medium.args = { size: 'base' }
 Medium.argTypes = {
   size: { table: { disable: true } }
 }
 
 export const Large = Template.bind({})
-Large.args = { size: 'large' }
+Large.args = { size: 'lg' }
 Large.argTypes = {
   size: { table: { disable: true } }
 }

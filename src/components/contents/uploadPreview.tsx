@@ -24,7 +24,7 @@ export default function UploadOverview ({ documentPreview, fileName, setFileName
       <div className='inline-flex gap-2 pb-4'>
         <Icon icon='document' size='xs'/>
         <div className='flex-1'>
-          <p className="text-gray-700">{uploadFileName}</p>
+          <p className="text-gray-700">{documentPreview?.name}</p>
           <p className='font-thin space-x-1'>
             <span>url:</span>
             <a href={documentPreview?.url} target='_blank' rel='noreferrer'

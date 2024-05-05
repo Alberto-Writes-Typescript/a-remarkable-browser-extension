@@ -31,14 +31,14 @@ function DocumentUploader (): React.ReactElement {
         <div className="flex-1 space-y-4">
           <div className="flex flex-col">
             <label className="text-[10px] text-gray-400 font-semibold">name</label>
-            <Input size="small"
+            <Input size="sm"
                   value={webDocumentName}
                   onChange={({ target: { value } }) => { setWebDocumentName(value as string) }}/>
           </div>
 
           <div className="flex flex-col">
             <label className="text-[10px] text-gray-400 font-semibold">url</label>
-            <Input size="small"
+            <Input size="sm"
                    value={webDocumentUrl}
                    onChange={({ target: { value } }) => { setWebDocumentUrl(value as string) }}/>
           </div>

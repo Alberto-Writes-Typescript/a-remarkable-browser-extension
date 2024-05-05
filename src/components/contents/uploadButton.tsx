@@ -62,7 +62,7 @@ export default function UploadButton ({ documentPreview, uploadDocument }: Uploa
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
-    placement: 'top-end',
+    placement: 'top-start',
     middleware: [
       offset(10),
       flip({ fallbackAxisSideDirection: 'end' }),

@@ -20,7 +20,7 @@ function Settings ({ device, unpair }: SettingsProps): React.ReactElement {
         <DescriptionList listItems={ { Device: device.id, 'Connected at': '12.12.2024' } }/>
 
         <div className="w-full inline-flex gap-4 justify-center">
-          <Button onClick={unpair}>Disconnect</Button>
+          <Button size="base" onClick={unpair}>Disconnect</Button>
         </div>
       </div>
     </div>

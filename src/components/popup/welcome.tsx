@@ -11,7 +11,7 @@ function Welcome (): React.ReactElement {
         your device with this extension
       </p>
 
-      <Button as="a" href={`chrome-extension://${chrome?.runtime?.id}/options.html`} target="_blank">
+      <Button as="a" size="base" href={`chrome-extension://${chrome?.runtime?.id}/options.html`} target="_blank">
         open extension settings
       </Button>
     </div>

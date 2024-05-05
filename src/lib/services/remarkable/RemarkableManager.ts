@@ -43,4 +43,8 @@ export default abstract class RemarkableManager {
 
     return client
   }
+
+  protected async remarkableUnpairedClient (): Promise<RemarkableClient> {
+    return new RemarkableClient()
+  }
 }

@@ -53,14 +53,14 @@ export default function UploadWidget ({ anchor: { element } }): React.ReactEleme
   }, [])
 
   useEffect(() => {
-    const widgetWrapper = widgetWrapperRef.current as HTMLDivElement
-    const widgetButton = widgetButtonRef.current as HTMLDivElement
+    const widgetWrapper = widgetWrapperRef.current
+    const widgetButton = widgetButtonRef.current
 
     // Updates widget wrapper to match the anchor element's position
-    widgetWrapper.style.width = `${element.offsetWidth}px`
+    if (widgetWrapper != null) widgetWrapper.style.width = `${element.offsetWidth}px`
 
     // Update button wrapper to position it around the widget wrapper
-    widgetButton.style.marginLeft = `${element.offsetWidth}px`
+    if (widgetButton != null) widgetButton.style.marginLeft = `${element.offsetWidth}px`
   })
 
   return (

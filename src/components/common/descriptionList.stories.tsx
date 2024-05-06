@@ -1,4 +1,3 @@
-
 import { type Meta } from '@storybook/react'
 import descriptionList, { DescriptionListDescription, DescriptionListTerm } from './descriptionList'
 

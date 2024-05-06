@@ -1,12 +1,9 @@
-import { sendToBackground } from '@plasmohq/messaging'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Device } from 'a-remarkable-js-sdk'
 import DeviceConnector from './components/options/deviceConnector'
-import { type GetConfigurationMessageResponsePayload } from './background/messages/getConfiguration'
 import Layout from './components/options/layout'
-import { type PairMessageResponsePayload } from './background/messages/pair'
+import MessageManager from './lib/services/MessageManager'
 import Settings from './components/options/settings'
-import { type UnpairMessageResponsePayload } from './background/messages/unpair'
 
 import '../assets/css/style.css'
 
@@ -14,22 +11,25 @@ function Options (): React.ReactElement {
   const [device, setDevice] = useState<Device | null>(null)
 
   const pair = useCallback(async (oneTimeCode: string): Promise<Device | null> => {
-    const pairResponse: PairMessageResponsePayload = await sendToBackground({ name: 'pair', body: { oneTimeCode } })
+    const pairResponse = await MessageManager.sendPairMessage(oneTimeCode)
     const device = new Device(pairResponse.deviceToken)
     setDevice(device)
+
     return device
   }, [])
 
   const unpair = useCallback(async (): Promise<void> => {
-    const unpairResponse: UnpairMessageResponsePayload = await sendToBackground({ name: 'unpair' })
+    const unpairResponse = await MessageManager.sendUnpairMessage()
     if (unpairResponse.removedDeviceToken != null) setDevice(null)
   }, [])
 
   useEffect(() => {
     async function fetchDeviceFromConfiguration (): Promise<void> {
-      const getConfigrationResponse: GetConfigurationMessageResponsePayload = await sendToBackground({ name: 'getConfiguration' })
+      const getConfigurationResponse = await MessageManager.sendGetConfigurationMessage()
 
-      if (getConfigrationResponse.deviceToken != null) setDevice(new Device(getConfigrationResponse.deviceToken))
+      if (getConfigurationResponse.deviceToken != null) {
+        setDevice(new Device(getConfigurationResponse.deviceToken))
+      }
     }
 
     void fetchDeviceFromConfiguration().then(r => {})

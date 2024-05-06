@@ -1,9 +1,8 @@
-import { sendToBackground } from '@plasmohq/messaging'
 import type { PlasmoGetOverlayAnchor } from 'plasmo'
 import React, { useEffect, useRef, useState } from 'react'
 
 import DocumentPreview from '../lib/models/DocumentPreview'
-import { type GetDocumentPreviewMessageResponsePayload } from '../background/messages/getDocumentPreview'
+import MessageManager from '../lib/services/MessageManager'
 import UploadButton from '../components/contents/uploadButton'
 import styleText from 'data-text:../../assets/css/style.css'
 import { UPLOAD_WIDGET_ANCHOR_ID } from '../lib/ui/uploadWidget/AnchorTrackingManager'
@@ -23,11 +22,7 @@ export default function UploadWidget ({ anchor: { element } }): React.ReactEleme
   const [documentPreview, setDocumentPreview] = useState<DocumentPreview | undefined>(undefined)
 
   async function uploadDocument (fileName: string, url: string): Promise<void> {
-    await sendToBackground({
-      name: 'upload',
-      body: { name: fileName, webDocumentUrl: url },
-      extensionId: 'egdpalgnbmgehpebjmkklcfkggadmglp'
-    })
+    await MessageManager.sendUploadMessage(fileName, url)
   }
 
   const widgetWrapperRef = useRef<HTMLDivElement>(null)
@@ -35,15 +30,7 @@ export default function UploadWidget ({ anchor: { element } }): React.ReactEleme
 
   useEffect(() => {
     async function fetchDocumentPreview (): Promise<void> {
-      const documentPreviewResponse: GetDocumentPreviewMessageResponsePayload =
-        await sendToBackground(
-          {
-            name: 'getDocumentPreview',
-            body: { url: element.href },
-            extensionId: 'egdpalgnbmgehpebjmkklcfkggadmglp'
-          }
-        )
-
+      const documentPreviewResponse = await MessageManager.sendGetDocumentPreviewMessage(element.href as string)
       const { url, size } = documentPreviewResponse
 
       setDocumentPreview(new DocumentPreview(url, size))

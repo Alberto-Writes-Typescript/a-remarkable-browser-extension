@@ -1,7 +1,8 @@
-import { sendToBackground } from '@plasmohq/messaging'
 import React from 'react'
+
 import Button from '../common/button'
 import Input from '../common/input'
+import MessageManager from '../../lib/services/MessageManager'
 
 function DocumentUploader (): React.ReactElement {
   const [webDocumentName, setWebDocumentName] = React.useState<string>('')
@@ -12,7 +13,8 @@ function DocumentUploader (): React.ReactElement {
     if (canUpload()) {
       setUploading(true)
       try {
-        await sendToBackground({ name: 'upload', body: { name: webDocumentName, webDocumentUrl } })
+        // TODO: we should move this logic up to the popup component, so components stay as dummy as possible
+        await MessageManager.sendUploadMessage(webDocumentName, webDocumentUrl)
         setWebDocumentName('')
         setWebDocumentUrl('')
       } finally {

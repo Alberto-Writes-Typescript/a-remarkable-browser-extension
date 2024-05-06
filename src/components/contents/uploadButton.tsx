@@ -37,7 +37,7 @@ export interface UploadButtonProps {
 }
 
 export default function UploadButton ({ documentPreview, uploadDocument }: UploadButtonProps): React.ReactElement {
-  const [fileName, setFileName] = useState<string | undefined>(documentPreview.name)
+  const [fileName, setFileName] = useState<string>(documentPreview.name)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [uploadStatus, setUploadStatus] = useState<string>('waiting')
 
@@ -49,7 +49,7 @@ export default function UploadButton ({ documentPreview, uploadDocument }: Uploa
     setUploadStatus('uploading')
 
     try {
-      await uploadDocument(fileName as string, documentPreview.url)
+      await uploadDocument(fileName, documentPreview.url)
 
       setUploadStatus('uploaded')
     } catch {

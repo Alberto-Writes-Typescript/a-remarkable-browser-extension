@@ -1,4 +1,4 @@
-import Input, { INPUT_SIZES, INPUT_VARIANTS, type InputProps} from './input'
+import Input, { INPUT_SIZES, INPUT_VARIANTS, type InputProps } from './input'
 import { type Meta, type StoryFn } from '@storybook/react'
 
 export default {

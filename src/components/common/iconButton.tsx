@@ -45,7 +45,7 @@ export default function Button ({ icon, as, variant, size, ...rest }: IconButton
     transition-all cursor-pointer disabled:cursor-not-allowed
     ${ICON_BUTTON_VARIANTS[variant ?? 'primary']}
     ${ICON_BUTTON_SIZES[size ?? 'medium']}
-    ${rest.className}
+    ${rest.className as string}
   `
 
   delete rest.className

@@ -1,5 +1,6 @@
 import { type DocumentReference } from 'a-remarkable-js-sdk'
 import type { PlasmoMessaging } from '@plasmohq/messaging'
+
 import Message from '../../lib/utils/Message'
 
 export interface UploadMessageRequestPayload {

@@ -1,5 +1,7 @@
 import { type PlasmoMessaging } from '@plasmohq/messaging'
+
 import AuthenticationManager from '../../lib/services/AuthenticationManager'
+import * as ErrorSerializer from '../../lib/serializers/error'
 import PairManager from '../services/remarkable/PairManager'
 import UploadManager from '../services/remarkable/UploadManager'
 
@@ -15,7 +17,14 @@ export default class Message {
   }
 
   async handle (request: PlasmoMessaging.Request, response: PlasmoMessaging.Response): Promise<void> {
-    const outcome = await this.process(request)
+    let outcome: unknown
+
+    try {
+      outcome = await this.process(request)
+    } catch (error) {
+      outcome = ErrorSerializer.serialize(error as Error)
+    }
+
     response.send(outcome)
   }
 

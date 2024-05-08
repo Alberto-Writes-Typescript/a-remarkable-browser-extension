@@ -1,4 +1,5 @@
 import type { PlasmoMessaging } from '@plasmohq/messaging'
+
 import Message from '../../lib/utils/Message'
 
 export interface PairMessageRequestPayload {

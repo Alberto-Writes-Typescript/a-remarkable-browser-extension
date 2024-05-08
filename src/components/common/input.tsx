@@ -1,19 +1,27 @@
 import React from 'react'
 
+export type InputVariant = 'box' | 'primary' | 'oneTimeCode' | 'transparent'
+
 export interface InputProps {
   size?: 'xs' | 'sm' | 'base' | 'lg'
-  variant?: 'primary' | 'oneTimeCode' | 'transparent'
+  variant?: InputVariant
   [x: string]: unknown
 }
 
 export const INPUT_SIZES = {
   xs: 'px-1 text-xs',
   sm: 'py-1 px-2 text-sm',
-  base: 'py-2 px-2 text-sm',
-  lg: 'py-3 px-2 text-base'
+  base: 'py-2 px-2 text-base',
+  lg: 'py-2.5 px-2 text-lg'
 }
 
 export const INPUT_VARIANTS = {
+  box: `
+    border border-gray-400 text-gray-600
+    focus:border-gray-700 focus:bg-gray-100
+    hover:border-gray-700 hover:bg-gray-100
+    disabled:text-gray-400 disabled:bg-gray-100 disabled:border-gray-400
+  `,
   primary: `
     border-b border-gray-400 text-gray-600
     focus:border-gray-700

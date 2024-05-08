@@ -4,10 +4,30 @@ import Welcome from './components/popup/welcome'
 
 import '../assets/css/style.css'
 import { Device } from 'a-remarkable-js-sdk'
+import DocumentPreview from './lib/models/DocumentPreview'
 import MessageManager from './lib/services/MessageManager'
 
 function IndexPopup (): React.ReactElement {
   const [device, setDevice] = useState<Device | null>(null)
+
+  async function getDocumentPreview (url: string): Promise<DocumentPreview> {
+    const documentPreviewResponse = await MessageManager.sendGetDocumentPreviewMessage(url)
+
+    try {
+      return new DocumentPreview(documentPreviewResponse.url, documentPreviewResponse.size)
+    } catch (error) {
+      return error
+    }
+  }
+
+  async function uploadDocument (fileName: string, url: string): Promise<null | Error> {
+    try {
+      await MessageManager.sendUploadMessage(fileName, url)
+      return null
+    } catch (error) {
+      return error
+    }
+  }
 
   useEffect(() => {
     async function fetchDeviceFromConfiguration (): Promise<void> {
@@ -19,8 +39,8 @@ function IndexPopup (): React.ReactElement {
   }, [])
 
   return (
-    <div className="min-w-[500px] mx-4 my-4 p-6 bg-gray-50 border border-gray-400">
-      { device != null ? <Dashboard device={device}/> : <Welcome/> }
+    <div className='p-4'>
+      { device != null ? <Dashboard device={device} getDocumentPreview={getDocumentPreview} uploadDocument={uploadDocument}/> : <Welcome/> }
     </div>
   )
 }

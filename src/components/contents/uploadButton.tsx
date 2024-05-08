@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import type DocumentPreview from '../../lib/models/DocumentPreview'
 import IconButton from '../common/iconButton'
 import Button from '../common/button'
-import UploadPreview from './uploadPreview'
+import UploadPreview from '../common/uploadPreview'
 import Icon from '../common/icon'
 
 const BUTTON_ICON = {

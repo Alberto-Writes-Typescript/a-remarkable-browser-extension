@@ -170,6 +170,8 @@ export const ICONS_LIBRARY = {
 
 export type IconName = keyof typeof ICONS_LIBRARY
 
+export type IconSize = keyof typeof ICON_SIZES
+
 export interface IconProps {
   icon: IconName
   size?: 'xxs' | 'xs' | 'sm' | 'base' | 'lg'

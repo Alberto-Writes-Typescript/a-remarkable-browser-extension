@@ -1,8 +1,8 @@
 {
-  "name": "a-remarkable-browser-extension",
-  "displayName": "A remarkable browser extension",
-  "version": "0.0.1",
-  "description": "A remarkable browser extension to upload your web documents to reMarkable Cloud in one click",
+  "name": "arbe",
+  "displayName": "a reMarkable browser extension",
+  "version": "0.1.0",
+  "description": "arbe is a reMarkable browser extension for reMarkable users, designed to upload web documents to your reMarkable in one click.",
   "author": "Alberto Hernández Cerezo <pascu216@gmail.com>",
   "scripts": {
     "build:plasmo": "plasmo build",
@@ -17,7 +17,7 @@
     "start": "npx concurrently --kill-others \"yarn run start:*\"",
     "test:unit": "jest --config config/jest.config.js --passWithNoTests",
     "test": "npx concurrently --kill-others \"yarn run test:*\"",
-    "package": "plasmo package"
+    "build": "yarn run plasmo build --zip"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.12",

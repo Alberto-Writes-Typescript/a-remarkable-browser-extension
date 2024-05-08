@@ -5,8 +5,11 @@ import {
   type GetDocumentPreviewMessageResponsePayload
 } from '../../background/messages/getDocumentPreview'
 import type { PairMessageRequestPayload, PairMessageResponsePayload } from '../../background/messages/pair'
+import { type SerializedError } from '../serializers/error'
 import { type UnpairMessageResponsePayload } from '../../background/messages/unpair'
 import { type UploadMessageRequestPayload, type UploadMessageResponsePayload } from '../../background/messages/upload'
+
+export class UnprocessedMessageError extends Error {}
 
 export default class MessageManager {
   static MessageManager = new MessageManager()
@@ -65,7 +68,11 @@ export default class MessageManager {
   }
 
   async send (name: string, body: Record<string, string> = {}): Promise<unknown> {
-    // @ts-expect-error - Expected Error
-    return await sendToBackground({ name, body, extensionId: this.#extensionId })
+    // @ts-expect-error - Expected error
+    const response = await sendToBackground({ name, body, extensionId: this.#extensionId })
+
+    if (response.error != null) throw new UnprocessedMessageError((response as SerializedError).message)
+
+    return response.body
   }
 }

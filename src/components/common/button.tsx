@@ -14,12 +14,12 @@ export const BUTTON_VARIANTS = {
   primary: `
     border border-gray-700 text-gray-700 font-semibold
     hover:bg-gray-700 hover:text-white
-    disabled:bg-gray-300 disabled:text-gray-300
+    disabled:bg-gray-100 disabled:text-gray-500
   `,
   transparent: `
     text-gray-700 font-semibold
     hover:bg-gray-700 hover:text-white
-    disabled:bg-gray-300 disabled:text-gray-300
+    disabled:bg-gray-100 disabled:text-gray-500
   `
 }
 

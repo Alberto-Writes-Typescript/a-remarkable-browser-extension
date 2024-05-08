@@ -36,5 +36,11 @@ Small.args = { size: 'sm', icon: 'upload' }
 export const Medium = Template.bind({})
 Medium.args = { size: 'base', icon: 'upload' }
 
+export const Large = Template.bind({})
+Large.args = { size: 'lg', icon: 'upload' }
+
 export const Primary = Template.bind({})
 Primary.args = { variant: 'primary', icon: 'upload', size: 'base' }
+
+export const Transparent = Template.bind({})
+Transparent.args = { variant: 'transparent', icon: 'upload', size: 'base' }

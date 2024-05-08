@@ -73,6 +73,6 @@ export default class MessageManager {
 
     if (response.error != null) throw new UnprocessedMessageError((response as SerializedError).message)
 
-    return response.body
+    return response
   }
 }

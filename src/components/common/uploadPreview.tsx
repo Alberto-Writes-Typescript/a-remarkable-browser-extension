@@ -8,19 +8,27 @@ import Input from '../common/input'
 export interface UploadOverviewProps {
   documentPreview?: DocumentPreview
   fileName?: string
-  setFileName: (fileName: string) => void
+  setFileName: (fileName: string) => void,
+  [x: string]: unknown
 }
 
-export default function UploadOverview ({ documentPreview, fileName, setFileName }: UploadOverviewProps): React.ReactElement {
+export default function UploadOverview ({ documentPreview, fileName, setFileName, ...rest }: UploadOverviewProps): React.ReactElement {
   const uploadFileName = fileName ?? documentPreview?.name ?? '-'
   const uploadFileSize = (documentPreview != null) ? filesize(documentPreview.size) : '-'
 
   let uploadHost = '-'
   if (documentPreview != null) uploadHost = new URL(documentPreview.url).host
 
+  const className = `
+    w-[300px] flex flex-col px-4 py-3 divide-y divide-dashed !bg-white text-xs text-gray-400 border border-gray-700
+    ${rest.className as string}
+  `
+
+  delete rest.className
+
   // TODO: horizontal description list & input component with labels
   return (
-    <div className="w-[300px] px-4 py-3 divide-y divide-dashed !bg-white text-xs text-gray-400 border border-gray-700">
+    <div className={className}>
       <div className='inline-flex gap-2 pb-4'>
         <Icon icon='document' size='xs'/>
         <div className='flex-1'>

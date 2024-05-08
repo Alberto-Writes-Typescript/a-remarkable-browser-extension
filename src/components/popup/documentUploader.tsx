@@ -1,59 +1,111 @@
-import React from 'react'
+import React, { useState } from 'react'
 
+import type DocumentPreview from '../../lib/models/DocumentPreview'
 import Button from '../common/button'
+import Heading from '../common/heading'
 import Input from '../common/input'
-import MessageManager from '../../lib/services/MessageManager'
+import UploadPreview from '../common/uploadPreview'
 
-function DocumentUploader (): React.ReactElement {
-  const [webDocumentName, setWebDocumentName] = React.useState<string>('')
-  const [webDocumentUrl, setWebDocumentUrl] = React.useState<string>('')
-  const [uploading, setUploading] = React.useState<boolean>(false)
+const BUTTON_LABEL = {
+  waiting: 'upload to reMarkable',
+  uploading: 'uploading...',
+  uploaded: 'uploaded',
+  failed: 'upload failed, try again'
+}
 
-  async function upload (): Promise<void> {
-    if (canUpload()) {
-      setUploading(true)
-      try {
-        // TODO: we should move this logic up to the popup component, so components stay as dummy as possible
-        await MessageManager.sendUploadMessage(webDocumentName, webDocumentUrl)
-        setWebDocumentName('')
-        setWebDocumentUrl('')
-      } finally {
-        setUploading(false)
+export interface DocumentUploaderProps {
+  getDocumentPreview: (string) => Promise<DocumentPreview>
+  uploadDocument: (fileName: string, folder: string) => Promise<null | Error>
+}
+
+function DocumentUploader ({ getDocumentPreview, uploadDocument }: DocumentUploaderProps): React.ReactElement {
+  const [url, setUrl] = React.useState<string>('')
+  const [documentPreview, setDocumentPreview] = React.useState<DocumentPreview | null>(null)
+  const [fileName, setFileName] = React.useState<string | undefined>(undefined)
+  const [uploadStatus, setUploadStatus] = useState<string>('waiting')
+
+  // Document Preview logic
+  // ----------------------
+  async function loadDocumentPreview (documentUrl: string): Promise<void> {
+    setUrl(documentUrl)
+
+    if (documentUrl != null && documentUrl !== '' && documentUrl !== url) {
+      const documentPreview = await getDocumentPreview(documentUrl)
+      if (documentPreview instanceof Error) {
+        setDocumentPreview(null)
+        setFileName(undefined)
+      } else {
+        setDocumentPreview(documentPreview)
+        setFileName(documentPreview.name)
+        setUploadStatus('waiting')
       }
     }
   }
 
-  function canUpload (): boolean {
-    return webDocumentName.length > 0 && webDocumentUrl.length > 0
+  // Upload logic
+  // ------------
+  async function startUpload (): Promise<void> {
+    if (fileName == null || documentPreview == null) return
+
+    setUploadStatus('uploading')
+
+    try {
+      await uploadDocument(fileName, documentPreview.url)
+
+      setUploadStatus('uploaded')
+      setFileName(undefined)
+      setUrl('')
+    } catch {
+      setUploadStatus('failed')
+    }
   }
 
   return (
-    <div className="flex flex-col gap-10 text-smp-4">
-      <div className="inline-flex gap-6 divide-x-[1px] divide-gray-700">
-        <div className="flex-1 space-y-4">
-          <div className="flex flex-col">
-            <label className="text-[10px] text-gray-400 font-semibold">name</label>
-            <Input size="sm"
-                  value={webDocumentName}
-                  onChange={({ target: { value } }) => { setWebDocumentName(value as string) }}/>
-          </div>
+    <div className='h-full w-full px-8 pt-4 pb-8 space-y-2'>
+      <div className='w-full flex flex-col items-start justify-center gap-4'>
+        <Heading as='h2' leadingIcon='documentUpload' className='text-gray-700'>upload document</Heading>
 
-          <div className="flex flex-col">
-            <label className="text-[10px] text-gray-400 font-semibold">url</label>
-            <Input size="sm"
-                   value={webDocumentUrl}
-                   onChange={({ target: { value } }) => { setWebDocumentUrl(value as string) }}/>
-          </div>
-        </div>
-
-        <div className="w-[140px] pl-6 pr-2">
-          <div className="border border-gray-400 w-full h-full"></div>
-        </div>
+        {
+          uploadStatus === 'uploading'
+            ? (
+            <Input
+              variant="box"
+              label="Document name"
+              disabled
+              placeholder="Enter document URL..."
+              className='w-full'
+              size='sm'/>
+              )
+            : (
+            <Input
+              variant="box"
+              label="Document name"
+              value={url}
+              onChange={async ({ target: { value } }) => { await loadDocumentPreview(value as string) }}
+              placeholder="Enter document URL..."
+              className='w-full'
+              size='sm'/>)
+        }
       </div>
 
-      <Button onClick={upload} disabled={!canUpload() || uploading}>
-        { uploading ? 'uploading...' : 'upload to reMarkable' }
-      </Button>
+      <div className='flex-grow'>
+        {documentPreview != null && (
+          <div className='contents space-y-2'>
+            <UploadPreview
+              documentPreview={documentPreview}
+              className='w-full'
+              fileName={fileName}
+              setFileName={setFileName}/>
+
+            <Button className='w-full'
+                    disabled={uploadStatus === 'uploading' || uploadStatus === 'uploaded'}
+                    onClick={async (): Promise<void> => { await startUpload() }}
+                    size='base'>
+              { BUTTON_LABEL[uploadStatus] }
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

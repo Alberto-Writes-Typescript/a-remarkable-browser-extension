@@ -47,6 +47,12 @@ Large.argTypes = {
   size: { table: { disable: true } }
 }
 
+export const Box = Template.bind({})
+Box.args = { variant: 'box' }
+Box.argTypes = {
+  variant: { table: { disable: true } }
+}
+
 export const Primary = Template.bind({})
 Primary.args = { variant: 'primary' }
 Primary.argTypes = {

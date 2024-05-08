@@ -1,7 +1,10 @@
-import * as DocumentPreviewSerializer from '../../lib/serializers/documentPreview'
 import type { PlasmoMessaging } from '@plasmohq/messaging'
+
+import * as DocumentPreviewSerializer from '../../lib/serializers/documentPreview'
 import DocumentPreview from '../../lib/models/DocumentPreview'
 import Message from '../../lib/utils/Message'
+import * as ErrorSerializer from '../../lib/serializers/error'
+import { type SerializedError } from '../../lib/serializers/error'
 
 export interface GetDocumentPreviewMessageRequestPayload {
   url: string
@@ -13,10 +16,15 @@ export interface GetDocumentPreviewMessageResponsePayload {
 }
 
 class GetDocumentPreviewMessage extends Message {
-  protected async process (request: PlasmoMessaging.Request): Promise<GetDocumentPreviewMessageResponsePayload> {
+  protected async process (request: PlasmoMessaging.Request): Promise<GetDocumentPreviewMessageResponsePayload | SerializedError> {
     const payload = request.body as GetDocumentPreviewMessageRequestPayload
-    const documentPreview = await DocumentPreview.from(payload.url)
-    return DocumentPreviewSerializer.serialize(documentPreview)
+
+    try {
+      const documentPreview = await DocumentPreview.from(payload.url)
+      return DocumentPreviewSerializer.serialize(documentPreview)
+    } catch (error) {
+      return ErrorSerializer.serialize(error as Error)
+    }
   }
 }
 

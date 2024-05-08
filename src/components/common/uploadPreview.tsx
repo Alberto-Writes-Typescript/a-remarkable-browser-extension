@@ -8,7 +8,7 @@ import Input from '../common/input'
 export interface UploadOverviewProps {
   documentPreview?: DocumentPreview
   fileName?: string
-  setFileName: (fileName: string) => void,
+  setFileName: (fileName: string) => void
   [x: string]: unknown
 }
 

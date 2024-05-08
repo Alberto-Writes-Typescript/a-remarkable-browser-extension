@@ -6,6 +6,7 @@ import Heading from '../common/heading'
 import Input from '../common/input'
 import UploadPreview from '../common/uploadPreview'
 
+// TODO: this should be handled together with the status update with a state machine
 const BUTTON_LABEL = {
   waiting: 'upload to reMarkable',
   uploading: 'uploading...',
@@ -27,17 +28,19 @@ function DocumentUploader ({ getDocumentPreview, uploadDocument }: DocumentUploa
   // Document Preview logic
   // ----------------------
   async function loadDocumentPreview (documentUrl: string): Promise<void> {
+    const previousDocumentUrl = url
+
     setUrl(documentUrl)
 
-    if (documentUrl != null && documentUrl !== '' && documentUrl !== url) {
-      const documentPreview = await getDocumentPreview(documentUrl)
-      if (documentPreview instanceof Error) {
-        setDocumentPreview(null)
-        setFileName(undefined)
-      } else {
+    if (documentUrl != null && documentUrl !== '' && documentUrl !== previousDocumentUrl) {
+      try {
+        const documentPreview = await getDocumentPreview(documentUrl)
         setDocumentPreview(documentPreview)
         setFileName(documentPreview.name)
         setUploadStatus('waiting')
+      } catch {
+        setDocumentPreview(null)
+        setFileName(undefined)
       }
     }
   }
@@ -51,7 +54,6 @@ function DocumentUploader ({ getDocumentPreview, uploadDocument }: DocumentUploa
 
     try {
       await uploadDocument(fileName, documentPreview.url)
-
       setUploadStatus('uploaded')
       setFileName(undefined)
       setUrl('')

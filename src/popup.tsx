@@ -12,27 +12,18 @@ function IndexPopup (): React.ReactElement {
 
   async function getDocumentPreview (url: string): Promise<DocumentPreview> {
     const documentPreviewResponse = await MessageManager.sendGetDocumentPreviewMessage(url)
-
-    try {
-      return new DocumentPreview(documentPreviewResponse.url, documentPreviewResponse.size)
-    } catch (error) {
-      return error
-    }
+    return new DocumentPreview(documentPreviewResponse.url, documentPreviewResponse.size)
   }
 
-  async function uploadDocument (fileName: string, url: string): Promise<null | Error> {
-    try {
-      await MessageManager.sendUploadMessage(fileName, url)
-      return null
-    } catch (error) {
-      return error
-    }
+  async function uploadDocument (fileName: string, url: string): Promise<null> {
+    await MessageManager.sendUploadMessage(fileName, url)
+    return null
   }
 
   useEffect(() => {
     async function fetchDeviceFromConfiguration (): Promise<void> {
-      const getConfigrationResponse = await MessageManager.sendGetConfigurationMessage()
-      if (getConfigrationResponse.deviceToken != null) setDevice(new Device(getConfigrationResponse.deviceToken))
+      const getConfigurationResponse = await MessageManager.sendGetConfigurationMessage()
+      if (getConfigurationResponse.deviceToken != null) setDevice(new Device(getConfigurationResponse.deviceToken))
     }
 
     void fetchDeviceFromConfiguration().then(r => {})

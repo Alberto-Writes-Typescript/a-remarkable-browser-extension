@@ -4,6 +4,7 @@ import {
   type GetDocumentPreviewMessageRequestPayload,
   type GetDocumentPreviewMessageResponsePayload
 } from '../../background/messages/getDocumentPreview'
+import { type GetExtensionMetadataResponsePayload } from '../../background/messages/getExtensionMetadata'
 import type { PairMessageRequestPayload, PairMessageResponsePayload } from '../../background/messages/pair'
 import { type SerializedError } from '../serializers/error'
 import { type UnpairMessageResponsePayload } from '../../background/messages/unpair'
@@ -12,59 +13,49 @@ import { type UploadMessageRequestPayload, type UploadMessageResponsePayload } f
 export class UnprocessedMessageError extends Error {}
 
 export default class MessageManager {
-  static MessageManager = new MessageManager()
-
-  static async send (name: string, body: Record<string, string> = {}): Promise<unknown> {
-    return await this.MessageManager.send(name, body)
+  static async sendGetDocumentPreviewMessage (url: string): Promise<GetDocumentPreviewMessageResponsePayload> {
+    const messageManager = await this.#messageManager()
+    const body = { url } satisfies GetDocumentPreviewMessageRequestPayload
+    return (await messageManager.send('getDocumentPreview', body)) as GetDocumentPreviewMessageResponsePayload
   }
 
-  static async sendGetDocumentPreviewMessage (url: string): Promise<GetDocumentPreviewMessageResponsePayload> {
-    return await this.MessageManager.sendGetDocumentPreviewMessage(url)
+  static async sendGetExtensionMetadataMessage (): Promise<GetExtensionMetadataResponsePayload> {
+    const messageManager = await this.#messageManager()
+    return (await messageManager.send('getExtensionMetadata')) as GetExtensionMetadataResponsePayload
   }
 
   static async sendGetConfigurationMessage (): Promise<GetConfigurationMessageResponsePayload> {
-    return await this.MessageManager.sendGetConfigurationMessage()
+    const messageManager = await this.#messageManager()
+    return (await messageManager.send('getConfiguration')) as GetConfigurationMessageResponsePayload
   }
 
   static async sendPairMessage (oneTimeCode: string): Promise<PairMessageResponsePayload> {
-    return await this.MessageManager.sendPairMessage(oneTimeCode)
+    const messageManager = await this.#messageManager()
+    const body = { oneTimeCode } satisfies PairMessageRequestPayload
+    return (await messageManager.send('pair', body)) as PairMessageResponsePayload
   }
 
   static async sendUnpairMessage (): Promise<UnpairMessageResponsePayload> {
-    return await this.MessageManager.sendUnpairMessage()
+    const messageManager = await this.#messageManager()
+    return (await messageManager.send('unpair')) as UnpairMessageResponsePayload
   }
 
   static async sendUploadMessage (fileName: string, url: string): Promise<UploadMessageResponsePayload> {
-    return await this.MessageManager.sendUploadMessage(fileName, url)
-  }
-
-  readonly #extensionId: string
-
-  constructor () {
-    this.#extensionId = 'egdpalgnbmgehpebjmkklcfkggadmglp'
-  }
-
-  async sendGetDocumentPreviewMessage (url: string): Promise<GetDocumentPreviewMessageResponsePayload> {
-    const body = { url } satisfies GetDocumentPreviewMessageRequestPayload
-    return (await this.send('getDocumentPreview', body)) as GetDocumentPreviewMessageResponsePayload
-  }
-
-  async sendGetConfigurationMessage (): Promise<GetConfigurationMessageResponsePayload> {
-    return (await this.send('getConfiguration')) as GetConfigurationMessageResponsePayload
-  }
-
-  async sendPairMessage (oneTimeCode: string): Promise<PairMessageResponsePayload> {
-    const body = { oneTimeCode } satisfies PairMessageRequestPayload
-    return (await this.send('pair', body)) as PairMessageResponsePayload
-  }
-
-  async sendUnpairMessage (): Promise<UnpairMessageResponsePayload> {
-    return (await this.send('unpair')) as UnpairMessageResponsePayload
-  }
-
-  async sendUploadMessage (fileName: string, url: string): Promise<UploadMessageResponsePayload> {
+    const messageManager = await this.#messageManager()
     const body = { name: fileName, webDocumentUrl: url } satisfies UploadMessageRequestPayload
-    return (await this.send('upload', body)) as UploadMessageResponsePayload
+    return (await messageManager.send('upload', body)) as UploadMessageResponsePayload
+  }
+
+  static async #messageManager (): Promise<MessageManager> {
+    const extensionlessMessageManager = new MessageManager()
+    const extensionId = (await extensionlessMessageManager.send('getExtensionMetadata') as GetExtensionMetadataResponsePayload).id
+    return new MessageManager(extensionId)
+  }
+
+  readonly #extensionId?: string
+
+  constructor (extensionId?: string) {
+    this.#extensionId = extensionId
   }
 
   async send (name: string, body: Record<string, string> = {}): Promise<unknown> {

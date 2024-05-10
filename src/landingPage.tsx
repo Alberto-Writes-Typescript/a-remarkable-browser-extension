@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import '../assets/css/style.css'
 import Welcome from './components/landingPage/welcome'
@@ -8,6 +8,11 @@ function LandingPage (): React.ReactElement {
   return <Welcome/>
 }
 
-ReactDOM.render(<LandingPage />, document.getElementById('root'))
+const container = document.getElementById('root')
 
-export default LandingPage
+if (container != null) {
+  const root = createRoot(container)
+  root.render(<LandingPage/>)
+}
+
+console.log(container)

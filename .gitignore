@@ -1,4 +1,3 @@
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -38,3 +37,7 @@ dist/
 # RubyMine Configuration
 .idea/*
 .env.test
+
+# Landing Page buikd
+!/landing_page/bundle.css
+!/landing_page/bundle.js

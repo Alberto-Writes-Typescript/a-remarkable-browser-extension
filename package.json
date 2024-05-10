@@ -7,7 +7,7 @@
   "scripts": {
     "build:plasmo": "plasmo build",
     "build:landingPage": "node ./config/esbuild.config.js",
-    "build:tailwind": "npx tailwindcss --postcss ./config/postcss.config.cjs -i assets/css/tailwind.css -o assets/css/style.css -c ./config/tailwindcss.config.mjs --minify",
+    "build:tailwind": "npx tailwindcss --postcss ./config/postcss.config.cjs -i assets/css/tailwind.css -o assets/css/style.css -c ./config/tailwindcss.config.js --minify",
     "lint:eslint": "yarn run eslint src -c config/eslint/.eslintrc --ignore-path config/eslint/.eslintignore",
     "lint:tsc": "tsc --noEmit",
     "lint": "yarn run lint:eslint && yarn run lint:tsc",
@@ -18,7 +18,7 @@
     "start": "npx concurrently --kill-others \"yarn run start:*\"",
     "test:unit": "jest --config config/jest.config.js --passWithNoTests",
     "test": "npx concurrently --kill-others \"yarn run test:*\"",
-    "build": "yarn build:tailwind && build:landingPage && yarn run plasmo build --zip"
+    "build": "yarn build:tailwind && yarn build:landingPage && yarn run plasmo build --zip"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.12",

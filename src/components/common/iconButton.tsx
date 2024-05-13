@@ -42,13 +42,15 @@ export const ICON_BUTTON_ICON_STYLES = {
 export const ICON_BUTTON_SIZES = {
   sm: 'h-[24px] w-[24px]',
   base: 'h-[34px] w-[34px]',
-  lg: 'h-[38px] w-[38px]'
+  lg: 'h-[38px] w-[38px]',
+  xl: 'h-[52px] w-[52px]'
 }
 
 export const ICON_BUTTON_ICON_SIZES = {
   sm: 'xs',
   base: 'sm',
-  lg: 'base'
+  lg: 'base',
+  xl: 'lg'
 }
 
 export default function Button ({ icon, as, variant, size, ...rest }: IconButtonProps): React.ReactElement {

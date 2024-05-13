@@ -14,5 +14,3 @@ if (container != null) {
   const root = createRoot(container)
   root.render(<LandingPage/>)
 }
-
-console.log(container)
